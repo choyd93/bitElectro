@@ -1,51 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
- <%@page import="com.bc.model.vo.NoticeVO"%>
-<%@page import="java.util.List"%>
-<%@page import="com.bc.model.common.Paging"%>
-<%@page import="com.bc.model.dao.NoticeDAO"%>
-    
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>1대1 문의 | bitElectro</title>
     <link rel="stylesheet" href="./styles.css" />
-    <script src ="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script>
-	$(document).ready(function(){
-		console.log("noticeOne 실행");
-	    $("#faqBtn").click(getJSONFaq);
-		});
-	    
-		function getJSONFaq() {
-			console.log(">> getJSONFaq() 실행~~~");
-		
-	        $.ajax("getJSONFaq",{
-	            type : "get",
-	            dataType : "json"; // 응답받을 데이터 타입 지정
-	            success : function (data) {
-	            	console.log("Ajax 처리 성공 응답받은 데이터 : " + data);
-	            		var result = "";
-	            	$.each(data, function (index, item) {
-	    	    		result += "<tr>";
-	    	    		result += "<td>" + item.cno + "</td>";
-	    	    		result += "<td>" + item.subject + "</td>";
-	    	    		result += "<td>" + item.content + "</td>";
-	    	    		result += "</tr>";
-	    	    		);
-	            		console.log(result);
-	    	    	})
-	    	    	$("#noticeList").html(result);
-	            },
-	            error : function (data) {
-	            	alert("Ajax 처리 실패");
-	            }
-	        });
-		})
-	
-</script>
   </head>
   <body>
     <div id="header">
@@ -89,7 +50,7 @@
     <div id="container">
       <div id="content">
         <div class="locationArea">
-          <h1>공지사항</h1>
+          <h1>1대1 문의하기</h1>
           <hr />
         </div>
         <div id="bitContentArea">
@@ -98,13 +59,13 @@
               <ul class="leftMenuBar">
                 <button class="leftMenuTitle">고객센터</button>
                 <hr />
-                <button class="leftMenuBtn" id="noticeBtn" onclick="noticeGo()">
+                <button class="leftMenuBtn" onclick="noticeGo()">
                   공지사항
                 </button>
-                <button class="leftMenuBtn" id="faqBtn" onclick="faqGo()">
+                <button class="leftMenuBtn" onclick="faqGo()">
                   자주 묻는 질문
                 </button>
-                <button class="leftMenuBtn" id="inquireBtn" onclick="inquireGo()">
+                <button class="leftMenuBtn" onclick="inquireGo()">
                   나의 문의 내역
                 </button>
               </ul>
@@ -112,26 +73,44 @@
           </div>
           <div id="mainArea">
             <div class="mainContent">
-              <table class="tableContent">
-                <thead>
-                  <tr>
-                    <th>번호</th>
-                    <th>제목</th>
-                    <th>날짜</th>
-                  </tr>
-                </thead>
+              <table class="tableContentInquireWrite">
                 <tbody>
-                <div id="noticeList"></div>
+                  <tr onclick="noticeContentNum1">
+                    <td>이름</th>
+                    <td><input class="pageBtn" type="text" /></td>
+                  </tr>
+                  <tr>
+                    <td>이메일</td>
+                    <td><input class="pageBtn" type="text" /></td>
+                  </tr>
+                  <tr>
+                    <td>휴대폰 번호</td>
+                    <td><input class="pageBtn" type="tel" /></td>
+                  </tr>
+                  <tr>
+                    <td>주문번호</td>
+                    <td><input class="pageBtn" type="text" /></td>
+                  </tr>
+                  <tr>
+                    <td>제목</td>
+                    <td><input class="pageBtn" type="text" /></td>
+                  </tr>
+                  <tr>
+                    <td>문의 내용</td>
+                    <td>
+                      <textarea class="pageBtn" rows="5" cols="45"> </textarea>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
+              <div class="mainContentBottom">
+                <button class="pageBtn mainPageBtn">확인</button>
+                <button class="pageBtn mainPageBtn">취소</button>
+              </div>
             </div>
           </div>
         </div>
-        <div class="paging">
-          <button class="pageBtn">1</button>
-          <button class="pageBtn">2</button>
-          <button class="pageBtn">3</button>
-        </div>
+
         <div class="rightArea"></div>
       </div>
     </div>
@@ -180,7 +159,10 @@
       const faqGo = () => {
         location.href = "controller?type=faq";
       };
+
+      const noticeContentNum1 = () => {
+        location.href = "controller?type=noticeContentNum1";
+      };
     </script>
   </body>
 </html>
-    

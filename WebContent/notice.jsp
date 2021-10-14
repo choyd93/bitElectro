@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+ <%@page import="com.bc.model.vo.NoticeVO"%>
+<%@page import="java.util.List"%>
+<%@page import="com.bc.model.common.Paging"%>
+<%@page import="com.bc.model.dao.NoticeDAO"%>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -7,6 +11,120 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="./styles.css" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        console.log("notice 실행");
+        
+        $("#noticeBtn").click(getJSONNotice);
+        $("#faqBtn").click(getJSONFaq);
+        $("#inquireBtn").click(getJSONInquire);
+       
+      });
+
+      function getJSONNotice() {
+        console.log(">> getJSONNotice() 실행~~~");
+
+        $.ajax("csController?type=help?category=notice", {
+          type: "get",
+          dataType: "json", 
+          success: function (data) {
+            console.log(data); 
+            
+            // 데이터 넣기 전 공백으로 초기화 
+            $("#noticeList").html("");
+            
+            var result = "";
+            $.each(data, function(index, item){
+           		for(i = 0; i< item.length; i++) {
+		             result += "<tr>";
+		             result += "<td>" + item[i].cno + "</td>";
+		             result += "<td>" + item[i].subject + "</td>";
+		             result += "<td>" + item[i].crdate + "</td>";
+		             result += "</tr>";
+            		}
+            });
+            $("#noticeList").html(result);
+          },
+          error: function (request, status, error) {
+            alert(
+              "Ajax 처리 실패, " + "\n" +
+                "code : " + request.status + "\n" +
+                "message : " + request.responseText + "\n" +
+                "error : " + error
+            );
+          },
+        });
+      }
+      
+      function getJSONFaq() {
+          console.log(">> getJSONFaq() 실행~~~");
+
+          $.ajax({
+        	url: "csController?type=help?category=faq",
+            type: "get",
+            dataType: "json", 
+            success: function (data) {
+              console.log(data); 
+              
+          	  // 데이터 넣기 전 공백으로 초기화 
+              $("#noticeList").html("");
+              
+              var result = "";
+              $.each(data, function(index, item){
+             		for(i = 0; i< item.length; i++) {
+  		             result += "<tr>";
+  		             result += "<td>" + item[i].cno + "</td>";
+  		             result += "<td>" + item[i].subject + "</td>";
+  		             result += "<td>" + item[i].crdate + "</td>";
+  		             result += "</tr>";
+              		}
+              });
+              $("#noticeList").html(result);
+            },
+            error: function (request, status, error) {
+              alert(
+                "Ajax 처리 실패, " + "\n" +
+                  "code : " + request.status + "\n" +
+                  "message : " + request.responseText + "\n" +
+                  "error : " + error
+              );
+            },
+          });
+        }
+      
+      function getJSONInquire() {
+          console.log(">> getJSONInquire() 실행~~~");
+
+          $.ajax("csController?type=help?category=inquire", {
+            type: "get",
+            dataType: "json", 
+            success: function (data) {
+              console.log(data); 
+              
+              var result = "";
+              $.each(data, function(index, item){
+             		for(i = 0; i< item.length; i++) {
+  		             result += "<tr>";
+  		             result += "<td>" + item[i].cno + "</td>";
+  		             result += "<td>" + item[i].subject + "</td>";
+  		             result += "<td>" + item[i].crdate + "</td>";
+  		             result += "</tr>";
+              		}
+              });
+              $("#noticeList").html(result);
+            },
+            error: function (request, status, error) {
+              alert(
+                "Ajax 처리 실패, " + "\n" +
+                  "code : " + request.status + "\n" +
+                  "message : " + request.responseText + "\n" +
+                  "error : " + error
+              );
+            },
+          });
+        }
+    </script>
   </head>
   <body>
     <div id="header">
@@ -59,13 +177,17 @@
               <ul class="leftMenuBar">
                 <button class="leftMenuTitle">고객센터</button>
                 <hr />
-                <button class="leftMenuBtn" onclick="noticeGo()">
+                <button class="leftMenuBtn" id="noticeBtn"">
                   공지사항
                 </button>
-                <button class="leftMenuBtn" onclick="faqGo()">
+                <button class="leftMenuBtn" id="faqBtn"">
                   자주 묻는 질문
                 </button>
-                <button class="leftMenuBtn" onclick="inquireGo()">
+                <button
+                  class="leftMenuBtn"
+                  id="inquireBtn"
+                  onclick="inquireGo()"
+                >
                   나의 문의 내역
                 </button>
               </ul>
@@ -81,22 +203,7 @@
                     <th>날짜</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>코로나 국민지원금 사용안내</td>
-                    <td>2021.10.10</td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>시스템 점검 안내(09/24 ~ 09/25)</td>
-                    <td>2021.09.23</td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>회원개인정보 이용내역 안내</td>
-                    <td>2021.09.01</td>
-                  </tr>
+                <tbody id="noticeList">
                 </tbody>
               </table>
             </div>
@@ -143,8 +250,8 @@
         </div>
       </div>
     </footer>
-    <script>
-      const noticeGo = () => {
+    <!--  <script>
+       const noticeGo = () => {
         location.href = "controller?type=notice";
       };
 
@@ -155,7 +262,7 @@
       const faqGo = () => {
         location.href = "controller?type=faq";
       };
-    </script>
+    </script> -->
   </body>
 </html>
-    
+        

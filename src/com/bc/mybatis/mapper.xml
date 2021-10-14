@@ -3,7 +3,29 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
-<mapper namespace="HR">
+<mapper namespace="bitelectro">
 
+	<!-- 고객센터 전체 글{notice(0), faq(1), inquire(2)}의 전체 건수 조회 -->
+	<select id="totalCount" resultType="int" parameterType="int">
+		SELECT COUNT(*) AS CNT FROM CUSTOMER_CENTER  WHERE CCATEGORY = #{num}
+	</select>
+	
+	<!-- 고객센터 페이지에 해당하는 게시글 조회 -->
+	<select id="boardlist" resultType="com.bc.model.vo.NoticeVO"
+			parameterType="map">
+		SELECT ROWNUM, B.*
+			      FROM (SELECT *
+			      FROM CUSTOMER_CENTER
+			      WHERE CCATEGORY = #{num}
+			      ORDER BY CNO DESC)B
+		 WHERE ROWNUM BETWEEN #{begin} AND #{end}
+	</select>
+	
+	<!-- 게시글 하나 조회 -->
+	<select id="one" resultType="com.bc.model.vo.NoticeVO" parameterType="int">
+		SELECT CNO, CSUBJECT, MID, CCONTENT, CRDATE
+		FROM CUSTOMER_CENTER
+		WHERE CNO = #{cno}
+	</select>
 
 </mapper>

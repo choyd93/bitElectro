@@ -188,6 +188,15 @@ span {
   border-bottom: 1px solid #d9d9d9;
 }
 
+.mainContentBottom {
+  position: relative;
+  margin: 30px;
+  margin-right: 0px;
+  left: 220px;
+  height: 300px;
+  width: 200px;
+}
+
 .leftArea {
   float: left;
   width: 176px;
@@ -211,17 +220,17 @@ table {
 
 th,
 td {
-  text-align: center;
   padding: 10px 5px 10px 5px;
 }
 
-th {
+/* th {
   font-size: 16px;
-}
+} */
 
 td {
   border-bottom: 1px solid #d9d9d9;
-  font-size: 14px;
+  font-size: 15px;
+  text-align: center;
 }
 
 thead {
@@ -231,11 +240,22 @@ thead {
 
 tbody tr:hover {
   background-color: #f9f9f9;
-  cursor: pointer;
 }
 
 .tableContent {
   width: 730px;
+}
+
+.tableContentInquireWrite {
+  width: 600px;
+}
+
+.tableContentInquireWrite td {
+  padding: 15px 10px 15px 10px;
+}
+
+.tableContentInquireWrite input {
+  width: 80%;
 }
 
 .mainContentTitleArea {
@@ -323,6 +343,12 @@ input[type="radio"]:checked + label {
 
 .pageBtn:active {
   border: 1px solid black;
+}
+
+.mainPageBtn {
+  padding: 5px 15px 5px 15px;
+  border-radius: 10%;
+  margin: 3px;
 }
 
 .leftMenuBtn {

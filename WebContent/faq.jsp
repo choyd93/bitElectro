@@ -7,6 +7,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="./styles.css" />
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        console.log("notice 실행");
+        $("#noticeBtn").click(getJSONNotice);
+        $("#faqBtn").click(getJSONFaq);
+        $("#inquireBtn").click(getJSONInquire);
+      });
+
+      function getJSONFaq() {
+          console.log(">> getJSONFaq() 실행~~~");
+
+          $.ajax("controller?type=faq", {
+            type: "get",
+            dataType: "json", 
+            success: function (data) {
+              console.log(data); 
+              
+              var result = "";
+              $.each(data, function(index, item){
+             		for(i = 0; i< item.length; i++) {
+  		             result += "<tr>";
+  		             result += "<td>" + item[i].cno + "</td>";
+  		             result += "<td>" + item[i].subject + "</td>";
+  		             result += "<td>" + item[i].crdate + "</td>";
+  		             result += "</tr>";
+              		}
+              });
+              $("#noticeList").html(result);
+            },
+            error: function (request, status, error) {
+              alert(
+                "Ajax 처리 실패, " + "\n" +
+                  "code : " + request.status + "\n" +
+                  "message : " + request.responseText + "\n" +
+                  "error : " + error
+              );
+            },
+          });
+        }
     
   </head>
   <body>
