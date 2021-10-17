@@ -1,6 +1,7 @@
 package com.bc.AjaxController;
 
 import java.io.IOException;
+
 import java.io.PrintWriter;
 import java.util.List;
 
@@ -23,23 +24,25 @@ public class CustomerCenterController extends HttpServlet {
 			throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 		
-		System.out.println(">> FrontControllerCommand doGet() 실행~~");
-		String type = request.getParameter("type");
-		System.out.println("> type : " + type);
+		System.out.println(">> CustomerCenterController doGet() 실행~~");
+		String category = request.getParameter("category");
+		System.out.println("> category : " + category);
 		
 		int ccategory = 0;
 		
-		if ("help?category=notice".equals(type)) {
+		if ("notice".equals(category)) {
 			ccategory = 1;
-		} else if ("help?category=faq".equals(type)) {
+		} else if ("faq".equals(category)) {
 			ccategory = 2;
-		} else if ("help?category=inquire".equals(type)) {
+		} else if ("inquire".equals(category)) {
 			ccategory = 3;
 		}
 
 		//페이징 처리를 위한 Paging 객체 생성해서 값 읽고 설정
 		Paging p = new Paging();
-
+		
+		System.out.println("ccategory 1번째 : " + ccategory);
+		
 		//1. 전체 게시물의 수량 구하기	
 		p.setTotalRecord(NoticeDAO.getTotalCount(ccategory)); 
 		p.setTotalPage();
@@ -48,6 +51,9 @@ public class CustomerCenterController extends HttpServlet {
 		
 		//2. 현재 페이지 구하기
 		String cPage = request.getParameter("cPage");
+
+		System.out.println("> cPage  : " + cPage);
+
 		if (cPage != null) {
 			p.setNowPage(Integer.parseInt(cPage));
 		}
@@ -85,20 +91,22 @@ public class CustomerCenterController extends HttpServlet {
 		List<NoticeVO> list = NoticeDAO.getList(p.getBegin(), p.getEnd(), ccategory);
 				
 		String result = makeJson(list);
+		String plist = makePage(p);
+
 		System.out.println("응답 JSON 문자열: " + result);
-			
+		System.out.println("응답 JSON 페이지 문자열: " + plist);
+
 		// jsp로 json 데이터 리턴 
 		PrintWriter out = response.getWriter();
-		out.print(result);
-		System.out.println("result : " + result);
-		System.out.println("ccategory : " + ccategory);
+		out.print(result + plist);
+		System.out.println("ccategory 마지막 확인 : " + ccategory);
 	
 //		request.getRequestDispatcher(result).forward(request, response);
 	}
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		System.out.println(">> FrontControllerCommand doPost() 실행-----------------");
+		System.out.println(">> CustomerCenterController doPost() 실행-----------------");
 		req.setCharacterEncoding("UTF-8");
 		doGet(req, resp);
 	}
@@ -112,8 +120,9 @@ public class CustomerCenterController extends HttpServlet {
 		for (NoticeVO vo : list) {
 			result.append("{");
 			result.append("\"cno\" : " + vo.getCno() + ",");
-			result.append("\"subject\" : \"" + vo.getCsubject() + "\",");
-			result.append("\"cconttent\" : \"" + vo.getCcontent() + "\",");
+			result.append("\"rnum\" : " + vo.getRnum() + ",");
+			result.append("\"csubject\" : \"" + vo.getCsubject() + "\",");
+			result.append("\"ccontent\" : \"" + vo.getCcontent() + "\",");
 			result.append("\"csecret\" : " + vo.getCsecret() + ",");
 			result.append("\"cimage\" : \"" + vo.getCimage() + "\",");
 			result.append("\"csecret\" : " + vo.getCsecret() + ",");
@@ -123,8 +132,33 @@ public class CustomerCenterController extends HttpServlet {
 			result.append("},");
 		}
 		result.delete(result.length() - 1, result.length());
-		result.append("]}");
+		result.append("],");
+
+//		result.append("]}");
 		
+		return result.toString();
+	}
+	
+	private String makePage(Paging vo) {
+		
+		StringBuilder result = new StringBuilder();
+		
+		result.append("\"plist\" : [");
+			result.append("{");
+			result.append("\"Begin\" : " + vo.getBegin() + ",");
+			result.append("\"BeginPage\" : " + vo.getBeginPage() + ",");
+			result.append("\"End\" : \"" + vo.getEnd() + "\",");
+			result.append("\"EndPage\" : \"" + vo.getEndPage() + "\",");
+			result.append("\"NowBlock\" : " + vo.getNowBlock() + ",");
+			result.append("\"NowPage\" : \"" + vo.getNowPage() + "\",");
+			result.append("\"NumPerPage\" : " + vo.getNumPerPage() + ",");
+			result.append("\"PagePerBlock\" : \"" + vo.getPagePerBlock() + "\",");
+			result.append("\"TotalBlock\" : \"" + vo.getTotalBlock() + "\",");
+			result.append("\"TotalPage\" : \"" + vo.getTotalPage() + "\",");
+			result.append("\"TotalRecord\" : \"" + vo.getTotalRecord() + "\"");
+			result.append("}");
+		result.append("]}");
+					
 		return result.toString();
 	}
 	

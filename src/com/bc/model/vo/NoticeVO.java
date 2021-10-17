@@ -3,25 +3,35 @@ package com.bc.model.vo;
 import java.sql.Date;
 
 public class NoticeVO {
-	private String  csubject, ccontent, cimage, ccategory, cstatus;
+	private String  mid, csubject, ccontent, cimage, ccategory, cstatus;
 	
-	private int cno, csecret;
+	private int cno, rnum, csecret;
 
 	private Date crdate;
 	
 	public NoticeVO() {}
 
-	public NoticeVO(String csubject, String ccontent, String cimage, String ccategory, String cstatus, int cno,
-			int csecret, Date crdate) {
+	public NoticeVO(String mid, String csubject, String ccontent, String cimage, String ccategory, String cstatus,
+			int cno, int rnum, int csecret, Date crdate) {
 		super();
+		this.mid = mid;
 		this.csubject = csubject;
 		this.ccontent = ccontent;
 		this.cimage = cimage;
 		this.ccategory = ccategory;
 		this.cstatus = cstatus;
 		this.cno = cno;
+		this.rnum = rnum;
 		this.csecret = csecret;
 		this.crdate = crdate;
+	}
+
+	public String getMid() {
+		return mid;
+	}
+
+	public void setMid(String mid) {
+		this.mid = mid;
 	}
 
 	public String getCsubject() {
@@ -72,6 +82,14 @@ public class NoticeVO {
 		this.cno = cno;
 	}
 
+	public int getRnum() {
+		return rnum;
+	}
+
+	public void setRnum(int rnum) {
+		this.rnum = rnum;
+	}
+
 	public int getCsecret() {
 		return csecret;
 	}
@@ -90,9 +108,9 @@ public class NoticeVO {
 
 	@Override
 	public String toString() {
-		return "NoticeVO [csubject=" + csubject + ", ccontent=" + ccontent + ", cimage=" + cimage + ", ccategory="
-				+ ccategory + ", cstatus=" + cstatus + ", cno=" + cno + ", csecret=" + csecret + ", crdate=" + crdate
-				+ "]";
+		return "NoticeVO [mid=" + mid + ", csubject=" + csubject + ", ccontent=" + ccontent + ", cimage=" + cimage
+				+ ", ccategory=" + ccategory + ", cstatus=" + cstatus + ", cno=" + cno + ", rnum=" + rnum + ", csecret="
+				+ csecret + ", crdate=" + crdate + "]";
 	}
-
+	
 }

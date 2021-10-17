@@ -14,6 +14,16 @@ body {
   overflow-y: auto;
 }
 
+a {
+  color: #4d4d4d;
+}
+
+
+a:hover {
+  color: darkred;
+  text-decoration: underline;
+}
+
 body,
 button,
 input,
@@ -209,7 +219,12 @@ span {
 }
 
 .paging {
-  text-align: center;
+  margin-right: 10px;
+}
+
+.pageNow {
+  color: #e71c2b;
+  border: 1px solid #d9d9d9;
 }
 
 /* table */
@@ -289,8 +304,8 @@ tbody tr:hover {
 /* input, button 타입 모음 */
 
 input[type="radio"] {
-  display: none;
   margin: 10px;
+  display: none;
 }
 
 input[type="radio"] + label {
@@ -333,12 +348,19 @@ input[type="radio"]:checked + label {
 .pageBtn {
   border: 1px solid #d9d9d9;
   background: none;
-  cursor: pointer;
+  
 }
 
 .pageBtn:hover {
-  border: 1px solid rgb(85, 85, 85);
   box-shadow: 2px 2px 5px #999;
+  cursor: pointer;
+}
+
+.pageBtn:disabled {
+  border: none;
+  color : grey;
+  background: none;
+  cursor: none;
 }
 
 .pageBtn:active {
@@ -349,6 +371,10 @@ input[type="radio"]:checked + label {
   padding: 5px 15px 5px 15px;
   border-radius: 10%;
   margin: 3px;
+}
+
+.paddingBtn1 {
+	margin-top: 15px;
 }
 
 .leftMenuBtn {

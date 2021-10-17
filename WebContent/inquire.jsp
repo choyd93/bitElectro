@@ -1,5 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@page import="com.bc.model.vo.NoticeVO"%>
+<%@page import="java.util.List"%>
+<%@page import="com.bc.model.common.Paging"%>
+<%@page import="com.bc.model.dao.NoticeDAO"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+    
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -10,35 +16,105 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
       $(document).ready(function () {
-        console.log("notice 실행");
-        /* getJSONInquire();
-        console.log("getJSONInquire 배경에서 실행"); */
+        console.log("inquire 실행");
+        
+        getJSONInquire();
         
         $("#noticeBtn").click(getJSONNotice);
+        $("#csCenterBtn").click(getJSONNotice);
         $("#faqBtn").click(getJSONFaq);
         $("#inquireBtn").click(getJSONInquire);
+        $("#inquireWriteFt").click(getInquireWrite);
+       
       });
+
+      function getInquireWrite() {
+    	  location.href = "inquireWrite.jsp";
+      }
+
+      function getJSONNotice() {
+          console.log(">> getJSONNotice() 실행~~~");
+          location.href = "notice.jsp";
+      };
+      
+      function getJSONFaq() {
+        	console.log(">> getJSONFaq() 실행~~~");
+            location.href = "faq.jsp";
+        };
       
       function getJSONInquire() {
           console.log(">> getJSONInquire() 실행~~~");
+          
+          var link = document.location.href;
+          console.log("link : " + link );
 
-          $.ajax("controller?type=inquire", {
+          $.ajax("csController?category=inquire", {
             type: "get",
             dataType: "json", 
             success: function (data) {
-              console.log(data); 
+            	const list = data["list"];
+                const plist = data["plist"];
+                console.log(data); 
+                console.log("list : " + list); 
+                console.log(list); 
+                console.log(plist); 
+                const begin = plist[0].Begin;
+                var cPage = plist[0].BeginPage;
+                var cPagePrev = plist[0].BeginPage - 1;
+                var cPageNext = plist[0].BeginPage + 1;
+                console.log("begin : " + begin); 
+                console.log("cPage : " + cPage); 
+                console.log("cPagePrev : " + cPagePrev); 
+                console.log("cPageNext : " + cPageNext); 
+              
+              // 데이터 넣기 전 공백으로 초기화 
+              $("#noticeList").html("");
               
               var result = "";
-              $.each(data, function(index, item){
-             		for(i = 0; i< item.length; i++) {
+              $.each(list, function(index, item){
   		             result += "<tr>";
-  		             result += "<td>" + item[i].cno + "</td>";
-  		             result += "<td>" + item[i].subject + "</td>";
-  		             result += "<td>" + item[i].crdate + "</td>";
+  		             result += "<td>" + item.rnum + "</td>";
+  		           	 result += "<td>";
+  		           	 result += "<a href='"+"noticeOne.jsp?ccategory="+item.ccategory+"&page="+1+"&rnum="+item.rnum+"'>";
+		             result += item.csubject + "</td>";
+  		             result += "<td>" + item.crdate + "</td>";
+  		           	 result += "<td>" + 1111 + "</td>";
+  		             result += "<td>" + item.cstatus + "</td>";
   		             result += "</tr>";
-              		}
               });
               $("#noticeList").html(result);
+              
+              var page = "";
+              page += "<tr>"
+              page += "<td colspan='5'>"
+              
+              if(plist[0].Begin == 1){
+           	  page += "<button type='button' class='pageBtn paging' disabled>이전으로</button>"
+              }else {
+          	  page += "<button type='button' class='pageBtn paging' onclick=javascript:location.href=inquire.jsp?cPage="+(cPagePrev)+">이전으로</button>"
+              }
+              
+              // 블록내에 표시할 페이지 태그 작성(시작페이지~끝페이지)
+              for(var i = plist[0].BeginPage; i <= plist[0].EndPage; i++){
+            	  if(i == plist[0].NowPage){
+        	  			page += "<button type='button' class='pageBtn pageNow paging'>"+i+"</button>"
+            	  }else {
+            		  	page += "<button type='button' class='pageBtn paging' onclick=javascript:location.href="+link+"?csController?category=inquire&cPage="+i+">"+i+"</button>"
+            	  }
+              }
+              // [다음으로]에 대한 사용여부 처리
+              if(plist[0].EndPage <= plist[0].TotalPage){
+            	  page += "<button type='button' class='pageBtn paging' onclick=javascript:location.href="+link+"?csController?category=inquire&cPage="+(cPageNext)+">다음으로</button>"
+              }else if(plist[0].EndPage >= plist[0].TotalPage){
+            	  page += "<button type='button' class='pageBtn paging' disabled>다음으로</button>"
+              }
+              page +="</ol>"
+              page +="</td>"
+              page +="</tr>"
+              
+              console.log("page : " + page);
+              $("#pageBlock").html(page);
+              
             },
             error: function (request, status, error) {
               alert(
@@ -50,7 +126,8 @@
             },
           });
         }
-    </script>
+      
+    </script> 
     
   </head>
   <body>
@@ -58,19 +135,19 @@
       <div class="headerWrap">
       <div class="utilArea">
         <ul class="utilMenu">
-            <li>
-              <button class="utilMenuOne">로그인</button>
-            </li>
-            <li>
-              <button class="utilMenuOne">회원가입</button>
-            </li>
-            <li>
-              <button class="utilMenuOne">장바구니</button>
-            </li>
-            <li>
-              <button class="utilMenuOne">고객센터</button>
-            </li>
-          </ul>
+          <li>
+            <button class="utilMenuOne">로그인</button>
+          </li>
+          <li>
+            <button class="utilMenuOne">회원가입</button>
+          </li>
+          <li>
+            <button class="utilMenuOne">장바구니</button>
+          </li>
+          <li>
+            <button class="utilMenuOne" id="csCenterBtn">고객센터</button>
+          </li>
+        </ul>
       </div>
 
       <div class="headerTop">
@@ -104,13 +181,13 @@
             <ul class="leftMenuBar">
                 <button class="leftMenuTitle">고객센터</button>
                 <hr />
-                <button class="leftMenuBtn" onclick="noticeGo()">
+                <button class="leftMenuBtn" id="noticeBtn">
                   공지사항
                 </button>
-                <button class="leftMenuBtn" onclick="faqGo()">
+                <button class="leftMenuBtn" id="faqBtn">
                   자주 묻는 질문
                 </button>
-                <button class="leftMenuBtn" onclick="inquireGo()">
+                <button class="leftMenuBtn" id="inquireBtn">
                   나의 문의 내역
                 </button>
               </ul>
@@ -118,13 +195,14 @@
         </div>
         <div id="mainArea">
             <div class="mainContent">
-              <form class="mainContentTitleArea">
-                <input type="radio" id="radioWeek">
-                <label for="radioWeek">1주일</label>
-                <input type="radio" id="radioMonth">
-                <label for="radioMonth">1개월</label>
-                <input type="radio" id="radioTreeMonth">
-                <label for="radioTreeMonth">3개월</label>
+              <button class="submitButtonType paddingBtn1" id="inquireWriteFt">글쓰기</button>
+              <form action="inquireTerm" method="get" class="mainContentTitleArea">
+                <input type="radio" name="term" value="week" id="week"/>
+                <label for="week">1주일</label>
+                <input type="radio" name="term" value="month" id="month"/>
+                <label for="month">1개월</label>
+                <input type="radio" name="term" value="treeMonth" id="treeMonth"/>
+                <label for="treeMonth">3개월</label>
                 <select>
                   <option>전체 상태</option>
                   <option>처리중</option>
@@ -142,39 +220,14 @@
                     <th>처리 여부</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>반품</td>
-                    <td>반품 문의</td>
-                    <td>21/10/09</td>
-                    <td>20211001</td>
-                    <td>처리중</td>
-                  </tr>
-                  <tr>
-                    <td>환불</td>
-                    <td>환불 문의</td>
-                    <td>21/09/11</td>
-                    <td>20211001</td>
-                    <td>처리완료</td>
-                  </tr>
-                  <tr>
-                    <td>배송</td>
-                    <td>배송 문의</td>
-                    <td>21/08/23</td>
-                   	<td>20211001</td>
-                    <td>처리완료</td>
-                  </tr>
+                <tbody id="noticeList">
                 </tbody>
+                <tfoot id="pageBlock">
+                </tfoot>
               </table>  
-
-            </div>
-        </div>
-      </div>
-      <div class="paging">
-        <button class="pageBtn">1</button>
-        <button class="pageBtn">2</button>
-        <button class="pageBtn">3</button>
-      </div>
+	            </div>
+	        </div>
+	      </div>
         <div class="rightArea"></div>
       </div>
     </div>
@@ -214,17 +267,9 @@
       </div>
     </footer>
     <script>
-        const noticeGo = () => {
-            location.href = "controller?type=notice";
-        };
+       
   
-        const inquireGo = () => {
-            location.href = "controller?type=inquire";
-        };
-  
-        const faqGo = () => {
-            location.href = "controller?type=faq";
-        };
       </script>
+      
   </body>
 </html>

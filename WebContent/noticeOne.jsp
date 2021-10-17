@@ -5,7 +5,45 @@
 <%@page import="com.bc.model.common.Paging"%>
 <%@page import="com.bc.model.dao.NoticeDAO"%>
     
-<html lang="en">
+<%
+request.setCharacterEncoding("UTF-8");
+
+System.out.println("------ NoticeOne dao selectOne 처리 전 --------");
+
+int ccategory = Integer.parseInt(request.getParameter("ccategory"));
+int rnum = Integer.parseInt(request.getParameter("rnum"));
+int pageNum = Integer.parseInt(request.getParameter("page"));
+
+int begin = 0;
+int end = 0;
+
+if(pageNum == 1) {
+	begin = 1;
+	end = 5;
+} else if(pageNum > 1){
+	begin = 5 * (pageNum - 1) + 1;
+	end = 5 * pageNum;
+}
+
+System.out.println("ccategory : " + ccategory);
+System.out.println("rnum : " + rnum);
+System.out.println("begin : " + begin);
+System.out.println("end : " + end);
+
+NoticeVO nvo = NoticeDAO.selectOne(ccategory, rnum, begin, end);
+
+System.out.println("------ NoticeOne dao selectOne 처리 후 --------");
+
+System.out.println("nvo : " + nvo);
+System.out.println("nvo.getCcategory : " + nvo.getCcategory());
+System.out.println("nvo.getRnum : " + nvo.getRnum());
+System.out.println("pageNum : " + pageNum);
+
+pageContext.setAttribute("nvo", nvo);
+pageContext.setAttribute("pageNum", pageNum);
+
+	%>
+    <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -14,37 +52,46 @@
     <link rel="stylesheet" href="./styles.css" />
     <script src ="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script>
-	$(document).ready(function(){
-		console.log("noticeOne 실행");
-	    $("#faqBtn").click(getJSONFaq);
-		});
-	    
-		function getJSONFaq() {
-			console.log(">> getJSONFaq() 실행~~~");
-		
-	        $.ajax("getJSONFaq",{
-	            type : "get",
-	            dataType : "json"; // 응답받을 데이터 타입 지정
-	            success : function (data) {
-	            	console.log("Ajax 처리 성공 응답받은 데이터 : " + data);
-	            		var result = "";
-	            	$.each(data, function (index, item) {
-	    	    		result += "<tr>";
-	    	    		result += "<td>" + item.cno + "</td>";
-	    	    		result += "<td>" + item.subject + "</td>";
-	    	    		result += "<td>" + item.content + "</td>";
-	    	    		result += "</tr>";
-	    	    		);
-	            		console.log(result);
-	    	    	})
-	    	    	$("#noticeList").html(result);
-	            },
-	            error : function (data) {
-	            	alert("Ajax 처리 실패");
-	            }
-	        });
-		})
-	
+      $(document).ready(function () {
+        console.log("noticeOne 실행");
+        
+        $("#noticeBtn").click(getJSONNotice);
+        $("#csCenterBtn").click(getJSONNotice);
+        $("#faqBtn").click(getJSONFaq);
+        $("#inquireBtn").click(getJSONInquire);
+      })
+
+      function getJSONNotice() {
+          console.log(">> getJSONNotice() 실행~~~");
+          location.href = "notice.jsp";
+      };
+      
+      function getJSONFaq() {
+        	console.log(">> getJSONFaq() 실행~~~");
+            location.href = "faq.jsp";
+      };
+
+      function getJSONInquire() {
+            console.log(">> getJSONInquire() 실행~~~");
+            location.href = "inquire.jsp"; 
+      };
+      
+      /* // 삭제하기 버튼 함수
+      function deleteOne() {
+    	  let answer = confirm("작성한 문의내역을 삭제하시겠습니까?");
+    		if(answer){
+          location.href='inquireDelete.jsp?ccategory=${nvo.ccategory }&page=${pageNum }&rnum=${nvo.rnum }'
+   		  }
+      }
+      
+      function modifyOne() {
+    	  let answer = confirm("작성한 문의내역을 수정하시겠습니까?");
+  		if(answer){
+          location.href='inquireUpdate.jsp?ccategory=${nvo.ccategory }&page=${pageNum }&rnum=${nvo.rnum }'
+  		}
+    } */
+
+    </script>
 </script>
   </head>
   <body>
@@ -62,7 +109,7 @@
               <button class="utilMenuOne">장바구니</button>
             </li>
             <li>
-              <button class="utilMenuOne">고객센터</button>
+              <button class="utilMenuOne" id="csCenterBtn">고객센터</button>
             </li>
           </ul>
         </div>
@@ -98,40 +145,48 @@
               <ul class="leftMenuBar">
                 <button class="leftMenuTitle">고객센터</button>
                 <hr />
-                <button class="leftMenuBtn" id="noticeBtn" onclick="noticeGo()">
+                <button class="leftMenuBtn" onclick="noticeGo()">
                   공지사항
                 </button>
-                <button class="leftMenuBtn" id="faqBtn" onclick="faqGo()">
+                <button class="leftMenuBtn" onclick="faqGo()">
                   자주 묻는 질문
                 </button>
-                <button class="leftMenuBtn" id="inquireBtn" onclick="inquireGo()">
+                <button class="leftMenuBtn" onclick="inquireGo()">
                   나의 문의 내역
                 </button>
               </ul>
             </div>
           </div>
           <div id="mainArea">
-            <div class="mainContent">
-              <table class="tableContent">
-                <thead>
-                  <tr>
-                    <th>번호</th>
-                    <th>제목</th>
-                    <th>날짜</th>
-                  </tr>
-                </thead>
-                <tbody>
-                <div id="noticeList"></div>
-                </tbody>
-              </table>
+            <div id="mainAreaHeader">
+              <div class="mainAreaHeaderTop">
+                <button class="pageBtn btnOne" onclick="javascript:history.back()">목록으로</button>
+               
+                <button type="button" class="mainAreaHeaderTopRight pageBtn btnOne" 
+                onclick="javascript:location.href='inquireUpdate.jsp?ccategory=${nvo.ccategory }&page=${pageNum }&rnum=${nvo.rnum }'">
+                  수정하기
+                </button>
+                <button type="button" class="mainAreaHeaderTopRight pageBtn btnOne" 
+                onclick="javascript:location.href='inquireDelete.jsp?ccategory=${nvo.ccategory }&page=${pageNum }&rnum=${nvo.rnum }'">
+                  삭제하기
+                </button>
+              </div>
+              <div class="mainAreaHeaderMiddle">
+                <h2>${nvo.csubject }</h2>
+              </div>
+              <div class="mainAreaHeaderMiddleLeft">
+                <span>${nvo.crdate }</span>
+              </div>
+            </div>
+            <div class="mainContentWriteArea">
+            <p>${nvo.ccontent }</p>
             </div>
           </div>
+          <div class="mainContentWriteAreaBottom">
+            <button class="mainContentWriteBottomBtn" onclick="javascript:history.back()">목록으로</button>
+          </div>
         </div>
-        <div class="paging">
-          <button class="pageBtn">1</button>
-          <button class="pageBtn">2</button>
-          <button class="pageBtn">3</button>
-        </div>
+
         <div class="rightArea"></div>
       </div>
     </div>
@@ -170,17 +225,21 @@
     </footer>
     <script>
       const noticeGo = () => {
-        location.href = "controller?type=notice";
+    	  location.href = "notice.jsp";
       };
 
       const inquireGo = () => {
-        location.href = "controller?type=inquire";
+        location.href = "inquire.jsp";
       };
 
       const faqGo = () => {
-        location.href = "controller?type=faq";
+        location.href = "faq.jsp";
       };
+      
+      /* const backFt = () => {
+    	  history.back();
+      } */
+     
     </script>
   </body>
 </html>
-    
