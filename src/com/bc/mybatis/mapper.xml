@@ -53,6 +53,15 @@
 	DELETE FROM CUSTOMER_CENTER WHERE CNO = #{cno}
 	</delete>
 	
+ <!--======================================  장바구니  =============================================-->
+	<!-- 장바구니 아이디 값으로 정보 select -->
+	<select id="cartSelectList" parameterType="String" resultType="com.bc.model.vo.CartVO">
+	SELECT * FROM CART WHERE MID = #{mid} ORDER BY CNTO
+	</select>
+
+	
+	
+	
  <!--======================================  회원 정보  =============================================-->
 	<!-- 회원 아이디로 정보 찾기 -->
 	<select id = "selectMemberOne" resultType="com.bc.model.vo.MemberVO" parameterType="String">

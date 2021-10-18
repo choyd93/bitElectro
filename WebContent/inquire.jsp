@@ -5,13 +5,13 @@
 <%@page import="com.bc.model.common.Paging"%>
 <%@page import="com.bc.model.dao.NoticeDAO"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
-    
+
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>나의 문의 내역 | bitElectro</title>
     <link rel="stylesheet" href="./styles.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -20,34 +20,19 @@
         
         getJSONInquire();
         
-        $("#noticeBtn").click(getJSONNotice);
         $("#csCenterBtn").click(getJSONNotice);
+        $("#cartBtn").click(getCart);
+
+        $("#noticeBtn").click(getJSONNotice);
         $("#faqBtn").click(getJSONFaq);
         $("#inquireBtn").click(getJSONInquire);
         $("#inquireWriteFt").click(getInquireWrite);
        
       });
 
-      function getInquireWrite() {
-    	  location.href = "inquireWrite.jsp";
-      }
-
-      function getJSONNotice() {
-          console.log(">> getJSONNotice() 실행~~~");
-          location.href = "notice.jsp";
-      };
-      
-      function getJSONFaq() {
-        	console.log(">> getJSONFaq() 실행~~~");
-            location.href = "faq.jsp";
-        };
-      
       function getJSONInquire() {
-          console.log(">> getJSONInquire() 실행~~~");
-          
-          var link = document.location.href;
-          console.log("link : " + link );
-
+        console.log(">> getJSONInquire() 실행~~~");
+        
           $.ajax("csController?category=inquire", {
             type: "get",
             dataType: "json", 
@@ -69,6 +54,7 @@
               
               // 데이터 넣기 전 공백으로 초기화 
               $("#noticeList").html("");
+              console.log("작동확인입니다.");
               
               var result = "";
               $.each(list, function(index, item){
@@ -99,7 +85,7 @@
             	  if(i == plist[0].NowPage){
         	  			page += "<button type='button' class='pageBtn pageNow paging'>"+i+"</button>"
             	  }else {
-            		  	page += "<button type='button' class='pageBtn paging' onclick=javascript:location.href="+link+"?csController?category=inquire&cPage="+i+">"+i+"</button>"
+            		  	page += "<button type='button' class='pageBtn paging' onclick=javascript:location.href=csController?category=inquire&cPage="+i+">"+i+"</button>"
             	  }
               }
               // [다음으로]에 대한 사용여부 처리
@@ -114,6 +100,8 @@
               
               console.log("page : " + page);
               $("#pageBlock").html(page);
+              console.log("작동확인입니다.22");
+
               
             },
             error: function (request, status, error) {
@@ -125,6 +113,25 @@
               );
             },
           });
+      }
+        
+        function getInquireWrite() {
+      	  location.href = "inquireWrite.jsp";
+        }
+
+        function getJSONNotice() {
+            console.log(">> getJSONNotice() 실행~~~");
+            location.href = "notice.jsp";
+        };
+        
+        function getJSONFaq() {
+          	console.log(">> getJSONFaq() 실행~~~");
+              location.href = "faq.jsp";
+        };
+        
+        function getCart() {
+      	  console.log(">> getCart() 실행~~~");
+            location.href = "cart.jsp"; 
         }
       
     </script> 
@@ -142,7 +149,7 @@
             <button class="utilMenuOne">회원가입</button>
           </li>
           <li>
-            <button class="utilMenuOne">장바구니</button>
+            <button class="utilMenuOne" id="cartBtn">장바구니</button>
           </li>
           <li>
             <button class="utilMenuOne" id="csCenterBtn">고객센터</button>
@@ -151,7 +158,7 @@
       </div>
 
       <div class="headerTop">
-        <h1>bitElectro</h1>
+          <h1><a href="mainMenu.jsp">bitElectro</a></h1>
       </div>
       <div class="headerMenuArea">
         <ul class="headerMenu">
@@ -170,7 +177,7 @@
     </div>
 
     <div id="container">
-      <div id="content">
+      <div id="content" class="csCenterContentHeight">
         <div class="locationArea">
           <h1>나의 문의내역</h1>
           <hr>
@@ -180,7 +187,6 @@
           <div class="leftMenu">
             <ul class="leftMenuBar">
                 <button class="leftMenuTitle">고객센터</button>
-                <hr />
                 <button class="leftMenuBtn" id="noticeBtn">
                   공지사항
                 </button>
@@ -247,7 +253,7 @@
             alt="bitElectro"
           />
           <div class="footerRight">
-            <ul></ul>
+            <ul>
               <li><h2>비트일렉트로</h2></li>
               <li>대표이사 : 2조 비트일렉트로</li>
               <li>
@@ -266,10 +272,5 @@
         </div>
       </div>
     </footer>
-    <script>
-       
-  
-      </script>
-      
   </body>
 </html>

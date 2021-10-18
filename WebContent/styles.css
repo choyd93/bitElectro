@@ -11,7 +11,10 @@ body {
   font-family: "맑은고딕", "돋음", arial, sans-serif;
   font-size: 12px;
   background: white;
-  overflow-y: auto;
+}
+
+.wrapBody{
+	overflow-y: auto;
 }
 
 a {
@@ -37,13 +40,27 @@ h2 {
   margin: 0;
 }
 
+hr {
+  width: 1000px;
+}
+
 li,
 span {
   display: block;
   line-height: 30px;
-  color: #585858;
   padding: 0 9px;
   height: 30px;
+}
+
+/* cart */
+.cartMemberInfoArea{
+  text-align: center;
+}
+
+.cartMemberInfoArea .cartMemberinfo > li {
+  display: inline-block;
+  font-size: 12px;
+  text-align: center;
 }
 
 /* utilMenuBar align */
@@ -108,6 +125,7 @@ span {
 .headerTop {
   text-align: center;
   font-size: large;
+  text-decoration: none;
   cursor: pointer;
 }
 
@@ -135,6 +153,7 @@ span {
   border: 0;
   padding: 0;
   margin: 0 auto;
+  
 }
 
 #content {
@@ -142,8 +161,7 @@ span {
   width: 1080px;
   margin: 0 auto;
   padding: 0 0 150px 0;
-  /*  */
-  overflow: auto;
+ 
 }
 
 .locationArea {
@@ -153,7 +171,12 @@ span {
 
 #bitContentArea {
   width: 989px;
-  overflow: auto;
+}
+
+.mainMenuTitleArea{
+  width: 989px;
+  height: 80px;
+  text-align: center;
 }
 
 /* mainArea  */
@@ -399,12 +422,120 @@ input[type="radio"]:checked + label {
   background: none;
 }
 
+.leftbtn{
+	float: right;
+}
+
+/* 장바구니 */
+.cartContentBtnArea .cartContentBnUl >li{
+	display: inline-block;
+}
+
+.cartContentBtn	{
+	margin-right:none;
+}
+
+.cartContentBnUl{
+	text-align: center;
+	padding-left:0px;
+	width:735px;
+	margin: 30px 0 30px 0;
+}
+
+.marginTop{
+	margin-top:20px;
+}
+
+/* .marginRightNone{
+	margin:0px;
+} */
+
+/* 주문 결제 */
+.paymentBottomArea .paymentBottomMiddle > li{
+	display:inline-block;
+}
+
+.paymentBorder{
+	border:1px solid #d9d9d9;
+	width: 700px;
+	height:150px;
+	padding: 10px 0px 10px 20px;
+}
+
+.paymentBorderSmall{
+	border:1px solid #d9d9d9;
+	width: 300px;
+	padding: 10px 10px 10px 20px;
+}
+
+.paymentBottomArea{
+	width: 730px;
+	height: 270px;
+}
+
+.paymentBottomMiddle{
+	padding:0px;
+}
+
+.paymentBottomRight{
+	float:right;
+}
+
+.paymentBottomMiddle > li {
+	padding-left:0px;
+}
+
+.paymentFinalArea{
+	margin-left: 200px;
+}
+
+
+/* 메인 페이지  */
+
+.csCenterContentHeight{
+	height: 400px;
+}
+
+
+.prdInfo {
+	width: 300px;
+	height: 35px;
+	font-size: 15px;
+  	font-weight: bold;
+  	text-align: center;
+}
+
+.prdName {
+  text-align: center;
+}
+
+.proItem:hover {
+	border: 1px solid #e71c2b;
+}
+
+.mainProdArea {
+  display:inline-block;
+}
+
+.mainMenuTitle1{
+  font-size: 30px;
+  color: #1872c9;
+}
+
+.mainProdArea .middleProdArea >li {
+	display: inline-block;
+	margin: 0 auto;
+}
+
+.middleProdArea {
+	padding-left: 0px;
+}
+
 /* footer */
 #footer {
   position: relative;
   bottom: 0;
   padding: 10px;
-  overflow: auto;
 }
 
 #footer .infoArea .footerMenuArea,
@@ -424,7 +555,6 @@ input[type="radio"]:checked + label {
   position: relative;
   float: right;
   width: 820px;
-  color: white;
 }
 
 .footerLeft .footerRight {
@@ -456,12 +586,12 @@ input[type="radio"]:checked + label {
   background-color: #232a32;
 }
 
-.footerArea {
-  color: white;
-}
-
 img {
   margin-top: 30px;
+}
+
+.imgMargin {
+  margin-top: 0;
 }
 
 .COPYRIGHT {

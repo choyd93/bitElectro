@@ -6,6 +6,8 @@
 
     
 <%
+request.setCharacterEncoding("UTF-8");
+
 /* String mid = request.getParameter("mid"); */
 // 테스트용
 String mid = "test1";
@@ -28,8 +30,10 @@ pageContext.setAttribute("mvo", mvo);
          $(document).ready(function () {
            console.log("notice 실행");
 
-           $("#noticeBtn").click(getJSONNotice);
            $("#csCenterBtn").click(getJSONNotice);
+           $("#cartBtn").click(getCart);
+           
+           $("#noticeBtn").click(getJSONNotice);
            $("#faqBtn").click(getJSONFaq);
            $("#inquireBtn").click(getJSONInquire);
 
@@ -77,6 +81,12 @@ pageContext.setAttribute("mvo", mvo);
                console.log(">> getJSONInquire() 실행~~~");
                location.href = "inquire.jsp";
          }
+         
+         function getCart() {
+       	  console.log(">> getCart() 실행~~~");
+             location.href = "cart.jsp"; 
+         }
+         
     </script>
   </head>
   <body>
@@ -91,7 +101,7 @@ pageContext.setAttribute("mvo", mvo);
               <button class="utilMenuOne">회원가입</button>
             </li>
             <li>
-              <button class="utilMenuOne">장바구니</button>
+              <button class="utilMenuOne" id="cartBtn">장바구니</button>
             </li>
             <li>
               <button class="utilMenuOne" id="csCenterBtn">고객센터</button>
@@ -100,7 +110,7 @@ pageContext.setAttribute("mvo", mvo);
         </div>
 
         <div class="headerTop">
-          <h1>bitElectro</h1>
+          <h1><a href="mainMenu.jsp">bitElectro</a></h1>
         </div>
         <div class="headerMenuArea">
           <ul class="headerMenu">
@@ -129,7 +139,6 @@ pageContext.setAttribute("mvo", mvo);
             <div class="leftMenu">
               <ul class="leftMenuBar">
                 <button class="leftMenuTitle">고객센터</button>
-                <hr />
                 <button class="leftMenuBtn" id="noticeBtn">
                   공지사항
                 </button>

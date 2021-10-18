@@ -1,9 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
- <%@page import="com.bc.model.vo.NoticeVO"%>
+<%@page import="com.bc.model.vo.CartVO"%>
+<%@page import="com.bc.model.vo.ProductVO"%>
+<%@page import="com.bc.model.dao.CartDAO"%>
+<%@page import="com.bc.model.dao.ProductDAO"%>
+ 
 <%@page import="java.util.List"%>
 <%@page import="com.bc.model.common.Paging"%>
-<%@page import="com.bc.model.dao.NoticeDAO"%>
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
 
 <html lang="en">
@@ -11,17 +15,14 @@
     <meta charset="UTF-8" />
     <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
-    <title>공지사항 | bitElectro</title>
+    <title>주문결제 | bitElectro</title>
     <link rel="stylesheet" href="./styles.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
       $(document).ready(function () {
         console.log("notice 실행");
         
-        var link = document.location.href;
-        console.log("link : " + link );
-        
-        getJSONNotice();
+        getJSONPayment();
         
         $("#csCenterBtn").click(getJSONNotice);
         $("#cartBtn").click(getCart);
@@ -32,10 +33,10 @@
        
       });
 
-      function getJSONNotice() {
-        console.log(">> getJSONNotice() 실행~~~");
+      function getJSONPayment() {
+        console.log(">> getJSONPayment() 실행~~~");
 
-        $.ajax("csController?category=notice", {
+        $.ajax("ssss", {
           type: "get",
           dataType: "json", 
           success: function (data) {
@@ -70,38 +71,6 @@
             console.log("result : " + result);
             $("#noticeList").html(result);
             
-            var page = "";
-            page += "<tr>"
-            page += "<td colspan='3'>"
-            
-            // 이전으로에 대한 사용여부 처리
-            if(plist[0].Begin == 1){
-         	  page += "<button type='button' class='pageBtn paging' disabled>이전으로</button>"
-            }else {
-        	  page += "<button type='button' class='pageBtn paging' onclick=javascript:location.href=inquire.jsp?cPage="+(cPagePrev)+">이전으로</button>"
-            }
-            
-            // 블록내에 표시할 페이지 태그 작성(시작페이지~끝페이지)
-            for(var i = plist[0].BeginPage; i <= plist[0].EndPage; i++){
-          	  if(i == plist[0].NowPage){
-      	  			page += "<button type='button' class='pageBtn pageNow paging'>"+i+"</button>"
-          	  }else {
-          		  	page += "<button type='button' class='pageBtn paging' onclick=javascript:location.href=inquire.jsp?cPage="+i+">"+i+"</button>"
-          	  }
-            }
-            // [다음으로]에 대한 사용여부 처리
-            if(plist[0].EndPage <= plist[0].TotalPage){
-          	  page += "<button type='button' class='pageBtn paging' onclick=javascript:location.href=notice.jsp?cPage="+(cPageNext)+">다음으로</button>"
-            }else if(plist[0].EndPage >= plist[0].TotalPage){
-          	  page += "<button type='button' class='pageBtn paging' disabled>다음으로</button>"
-            }
-            page +="</ol>"
-            page +="</td>"
-            page +="</tr>"
-            
-            console.log("page : " + page);
-            $("#pageBlock").html(page);
-            
           },
           error: function (request, status, error) {
             alert(
@@ -132,6 +101,7 @@
     </script>
   </head>
   <body>
+  	<div id="wrapBody">
     <div id="header">
       <div class="headerWrap">
         <div class="utilArea">
@@ -171,38 +141,42 @@
     </div>
 
     <div id="container">
-      <div id="content" class="csCenterContentHeight">
+      <div id="content">
         <div class="locationArea">
-          <h1>공지사항</h1>
+          <h1>주문결제</h1>
           <hr />
-        </div>
+        </div >
+        
         <div id="bitContentArea">
-          <div class="leftArea">
-            <div class="leftMenu">
-              <ul class="leftMenuBar">
-                <button class="leftMenuTitle">고객센터</button>
-                <button class="leftMenuBtn" id="noticeBtn">
-                  공지사항
-                </button>
-                <button class="leftMenuBtn" id="faqBtn">
-                  자주 묻는 질문
-                </button>
-                <button
-                  class="leftMenuBtn"
-                  id="inquireBtn">
-                  나의 문의 내역
-                </button>
-              </ul>
-            </div>
-          </div>
           <div id="mainArea">
+          <form id="">
             <div class="mainContent">
-              <table class="tableContent">
+            	<div>
+            		<h1>1. 배송정보</h1>
+            		<div class="paymentBorder">
+            			<input type="radio" id="defaultAddress" value="defaultAddress">
+            			<label for="defaultAddress">기본배송지</label>
+            			<input type="radio" id="defaultAddress" value="defaultAddress">
+            		    <label for="defaultAddress">직접입력</label>
+            		    <p>홍길동</p>
+            		    <p>(01234) 서울특별히 마포구 비트로 9999</p>
+            		    <p>010-1234-1234</p>
+            		    <select>
+            		        <option value="aa">배송시 요청사항 선택하기</option>  
+            		    	<option value="aa">빠르게 보내주세요.</option>  
+            		    	<option value="aa">퀵으로 보내주세요.</option>           		    	
+            		    </select>
+            		</div>
+            	</div>
+            	<div>
+            		<h1>2. 주문상품</h1>
+              <table class="tableContent marginTop">
                 <thead>
                   <tr>
-                    <th>번호</th>
-                    <th>제목</th>
-                    <th>날짜</th>
+                    <th>상품명</th>
+                    <th>수량<th>
+                    <th>주문금액</th>
+                    <th>배송정보</th>
                   </tr>
                 </thead>
                 <tbody id="noticeList">
@@ -210,11 +184,69 @@
                 <tfoot id="pageBlock">
                 </tfoot>
               </table>
-            </div>
+              </div>
+              <div>
+              <div class="paymentBottomArea">
+              <ul class="paymentBottomMiddle">
+              	  <li>
+            		<h1 style="width:340px;">3. 할인/포인트</h1>
+            		<div class="paymentBorderSmall">
+            			<p>쿠폰 할인 0원</p>
+            		<button type="button" class="submitButtonType">쿠폰변경</button>
+            			<p>포인트 0원</p>
+            		<input type="text" placeholder="0원">
+            		<button type="button" class="submitButtonType">전액 사용</button>
+            		</div>
+            	  </li>
+            	  <li>
+            	  	<div>
+            	  	<h1 style="width:340px;">4. 결제방법</h1>
+            	 	 <div class="paymentBorderSmall">
+	            		<input type="radio" id="accountTransfer" value="accountTransfer">
+	            			<label for="accountTransfer">계좌이체</label>
+	           			<input type="radio" id="depositWithout" value="depositWithout">
+	           				<label for="depositWithout">무통장 입금</label>
+	           			<input type="radio" id="creditCard" value="creditCard">
+            				<label for="creditCard">신용카드</label>
+       				</div>
+       				</div>
+            	  </li>
+            	</ul>
+            	</div>
+            	<div class="paymentFinalArea">
+            		<h1>5. 최종결제 금액 확인</h1>
+            		<div class="paymentBorderSmall">
+	            		<p>총 상품 금액  0원</p>
+	            		<p>배송비  0원</p>
+	            		<p>결제 방법</p>
+	            		<p>최종결제 금액  0원</p>
+            		</div>
+            	</div>
+            	</div>
+              <div class="cartContentBtnArea">
+              	<ul class="cartContentBnUl">
+	              <li class="cartContentBtn">
+	              <button type="button" class="pageBtn">취소하기</button>
+	              </li>
+	        	  <li class="cartContentBtn">
+	              <button type="button" class="submitButtonType">결제하기</button>
+	              </li>
+	            </ul>
+              </div>
           </div>
+          </form>
+          
         </div>
         <div class="rightArea"></div>
       </div>
+      <!-- <hr style="margin-left:40px;"/>
+          <div style="margin-left:100px">
+          <h3>유의사항</h3>
+			<p>한 번에 주문 가능한 최대 상품 종류는 10개입니다.</p>
+			<p>담긴 상품 종류(옵션단위)는 10개까지만 보여집니다.</p>
+			<p>담긴 상품 종류가 10개 초과되면 가장 예전에 담았던 상품 순서대로 비노출 됩니다.</p>
+          </div> -->
+    </div>
     </div>
 
     <footer id="footer">
@@ -249,7 +281,8 @@
         </div>
       </div>
     </footer>
-    <!-- <script>
+    </div>
+    <script>
        const noticeGo = () => {
         location.href = "controller?type=notice";
       };
@@ -261,7 +294,7 @@
       const faqGo = () => {
         location.href = "controller?type=faq";
       };
-    </script>  -->
+    </script> 
   </body>
 </html>
         

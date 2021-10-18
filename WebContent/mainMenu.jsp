@@ -11,14 +11,12 @@
     <meta charset="UTF-8" />
     <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
-    <title>장바구니 | bitElectro</title>
+    <title>메인 메뉴 | bitElectro</title>
     <link rel="stylesheet" href="./styles.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
       $(document).ready(function () {
-        console.log("notice 실행");
-        
-        getJSONCart();
+        console.log("notice 실행");  
         
         $("#csCenterBtn").click(getJSONNotice);
         $("#cartBtn").click(getCart);
@@ -28,61 +26,11 @@
         $("#inquireBtn").click(getJSONInquire);
        
       });
-      
+
       function getJSONNotice() {
           console.log(">> getJSONNotice() 실행~~~");
           location.href = "notice.jsp";
       };
-
-      function getJSONCart() {
-        console.log(">> getJSONCart() 실행~~~");
-
-        $.ajax("cartView", {
-          type: "get",
-          dataType: "json", 
-          success: function (data) {
-        	  const list = data["list"];
-              const plist = data["plist"];
-              console.log(data); 
-              console.log("list : " + list); 
-              console.log(list); 
-              console.log(plist); 
-              const begin = plist[0].Begin;
-              var cPage = plist[0].BeginPage;
-              var cPagePrev = plist[0].BeginPage - 1;
-              var cPageNext = plist[0].BeginPage + 1;
-              console.log("begin : " + begin); 
-              console.log("cPage : " + cPage); 
-              console.log("cPagePrev : " + cPagePrev); 
-              console.log("cPageNext : " + cPageNext); 
-            
-            // 데이터 넣기 전 공백으로 초기화 
-            $("#noticeList").html("");
-            
-            var result = "";
-            $.each(list, function(index, item){
-		             result += "<tr>";
-		             result += "<td>" + item.rnum + "</td>";
-		           	 result += "<td>";
-		           	 result += "<a href='"+"noticeOne.jsp?ccategory="+item.ccategory+"&page="+1+"&rnum="+item.rnum+"'>";
-	             	 result += item.csubject + "</td>";
-		             result += "<td>" + item.crdate + "</td>";
-		             result += "</tr>";
-         	});
-            console.log("result : " + result);
-            $("#noticeList").html(result);
-            
-          },
-          error: function (request, status, error) {
-            alert(
-              "Ajax 처리 실패, " + "\n" +
-                "code : " + request.status + "\n" +
-                "message : " + request.responseText + "\n" +
-                "error : " + error
-            );
-          },
-        });
-      }
       
       function getJSONFaq() {
         	console.log(">> faqGo() 실행~~~");
@@ -142,62 +90,61 @@
 
     <div id="container">
       <div id="content">
-        <div class="locationArea">
-          <h1>장바구니</h1>
-          <hr />
-        </div >
-        <div class="cartMemberInfoArea">
-	        <ul class="cartMemberinfo"> 
-		        <li>홍길동님의 혜택정보</li>
-		        <li>쿠폰 : 1장</li>
-		        <li>포인트 : 1000p</li>
-	        </ul>
+        <div class="mainMenuBannerArea">
+          <img src="https://cdn.011st.com/11dims/resize/1240x400/quality/99/11src/http://cdn.011st.com/ds/2021/10/15/1311/87c6631a26f7c875e4255609166d01ff.jpg" height="300px" width="1000px";>
         </div>
         <div id="bitContentArea">
-          <div id="mainArea" style="margin-bottom:100px;">
-            <div class="mainContent">
-	            <form action="payment.jsp">
-	            	<input type="checkbox"> 전체 선택(0개)
-	            	<button type="button" class="submitButtonType">선택 삭제</button>
-              <table class="tableContent marginTop">
-                <thead>
-                  <tr>
-                    <th>상품명</th>
-                    <th>판매가</th>
-                    <th>수량</th>
-                    <th>할인금액</th>
-                    <th>합계</th>
-                    <th>선택</th>
-                  </tr>
-                </thead>
-                <tbody id="noticeList">
-                </tbody>
-                <tfoot id="pageBlock">
-                </tfoot>
-              </table>
-              <div class="cartContentBtnArea">
-              	<ul class="cartContentBnUl">
-	              <li class="cartContentBtn">
-	              <button type="button" class="pageBtn">계속 쇼핑하기</button>
-	              </li>
-	        	  <li class="cartContentBtn">
-	              <button type="submit" class="submitButtonType">주문하기</button>
-	              </li>
-	            </ul>
-              </div>
-              </form>  
-            </div>
+          <div class="mainMenuTitleArea">
+          <span>고객님 취향저격 추천 상품</span>
+          <h2 class="mainMenuTitle1">베스트 상품</h2>
           </div>
-          <hr style="margin-left:40px;"/>
-          <div style="margin-left:100px">
-          <h3>유의사항</h3>
-			<p>한 번에 주문 가능한 최대 상품 종류는 10개입니다.</p>
-			<p>담긴 상품 종류(옵션단위)는 10개까지만 보여집니다.</p>
-			<p>담긴 상품 종류가 10개 초과되면 가장 예전에 담았던 상품 순서대로 비노출 됩니다.</p>
+          <hr/>
+          <div class="mainProdArea">
+          	<ul class="middleProdArea">
+          		<li>
+          <div class="proItem">
+       	  <a href="/app/goods/goodsDetail?goodsNo=0011916654&amp;ws_mainPrd1=0011916654" target="_self" class="prdLink">
+          <div class="">
+          	<img class="imgMargin" src="http://static1.e-himart.co.kr/contents/goods/00/11/91/66/54/0011916654__NT350XCR-A58M__M_300_300.jpg" alt="북플러스 노트북 NT350XCR-A58M 인텔 10세대 i5 8GB 256GB 프리도스 (화이트)" width="300" height="300" >
           </div>
+          <div class="prdInfo">
+		  <p class="prdName prdInfo">
+			삼성전자&nbsp;[노트북 판매1위]&nbsp;북플러스 노트북 (화이트)</p>
+			<p>649,000원</p>
+		  </div>
+          </div>
+          	</li>
+          	<li>
+          <div class="proItem">
+       	  <a href="/app/goods/goodsDetail?goodsNo=0011916654&amp;ws_mainPrd1=0011916654" target="_self" class="prdLink">
+          <div class="">
+          	<img class="imgMargin" src="https://m.etlandmall.co.kr/nas/cdn/attach/product/2021/03/26/S2963327/S2963327_0_500.jpg" alt="비스포크 4도어 냉장고" width="300" height="300" >
+          </div>
+          <div class="prdInfo">
+		  <p class="prdName prdInfo">
+			삼성전자&nbsp;[냉장고 판매1위]&nbsp;비스포크 4도어 냉장고</p>
+			<p>1,370,000원</p>
+		  </div>
+          </div>
+          </li>
+          <li>
+          <div class="proItem">
+       	  <a href="/app/goods/goodsDetail?goodsNo=0011916654&amp;ws_mainPrd1=0011916654" target="_self" class="prdLink">
+          <div class="">
+          	<img class="imgMargin" src="http://gdimg.gmarket.co.kr/1738168373/still/280?ver=1579672729" alt="독일 보쉬 프리미엄 세탁기" width="300" height="300" >
+          </div>
+          <div class="prdInfo">
+		  <p class="prdName prdInfo">
+			보쉬&nbsp;[세탁기 판매량 폭주]&nbsp;독일 보쉬 프리미엄 세탁기</p>
+			<p>2,237,000원</p>
+		  </div>
+          </div>
+          </li>
+          </ul>
         </div>
         <div class="rightArea"></div>
       </div>
+    </div>
     </div>
 
     <footer id="footer">

@@ -9,7 +9,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>자주 묻는 질문 | bitElectro</title>
     <link rel="stylesheet" href="./styles.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -18,8 +18,10 @@
         
         getJSONFaq();
         
-        $("#noticeBtn").click(getJSONNotice);
         $("#csCenterBtn").click(getJSONNotice);
+        $("#cartBtn").click(getCart);
+        
+        $("#noticeBtn").click(getJSONNotice);
         $("#faqBtn").click(getJSONFaq);
         $("#inquireBtn").click(getJSONInquire);
        
@@ -114,6 +116,10 @@
           console.log(">> getJSONInquire() 실행~~~");
           location.href = "inquire.jsp"; 
         }
+      function getCart() {
+    	  console.log(">> getCart() 실행~~~");
+          location.href = "cart.jsp"; 
+      }
       
     </script>
   </head>
@@ -129,7 +135,7 @@
               <button class="utilMenuOne">회원가입</button>
             </li>
             <li>
-              <button class="utilMenuOne">장바구니</button>
+              <button class="utilMenuOne" id="cartBtn">장바구니</button>
             </li>
             <li>
               <button class="utilMenuOne" id="csCenterBtn">고객센터</button>
@@ -138,7 +144,7 @@
         </div>
 
         <div class="headerTop">
-          <h1>bitElectro</h1>
+          <h1><a href="mainMenu.jsp">bitElectro</a></h1>
         </div>
         <div class="headerMenuArea">
           <ul class="headerMenu">
@@ -157,7 +163,7 @@
     </div>
 
     <div id="container">
-      <div id="content">
+      <div id="content" class="csCenterContentHeight">
         <div class="locationArea">
           <h1>자주 묻는 질문</h1>
           <hr />
@@ -166,8 +172,7 @@
           <div class="leftArea">
             <div class="leftMenu">
               <ul class="leftMenuBar">
-                <button class="leftMenuTitle">고객센터</button>
-                <hr />
+                <button class="leftMenuTitle" >고객센터</button>
                 <button class="leftMenuBtn" id="noticeBtn"">
                   공지사항
                 </button>
@@ -177,8 +182,7 @@
                 <button
                   class="leftMenuBtn"
                   id="inquireBtn"
-                  onclick="inquireGo()"
-                >
+                  onclick="inquireBtn">
                   나의 문의 내역
                 </button>
               </ul>

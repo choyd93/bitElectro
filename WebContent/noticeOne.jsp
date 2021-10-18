@@ -48,15 +48,17 @@ pageContext.setAttribute("pageNum", pageNum);
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>게시글 보기 | bitElectro</title>
     <link rel="stylesheet" href="./styles.css" />
     <script src ="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script>
       $(document).ready(function () {
         console.log("noticeOne 실행");
         
-        $("#noticeBtn").click(getJSONNotice);
         $("#csCenterBtn").click(getJSONNotice);
+        $("#cartBtn").click(getCart);
+
+        $("#noticeBtn").click(getJSONNotice);
         $("#faqBtn").click(getJSONFaq);
         $("#inquireBtn").click(getJSONInquire);
       })
@@ -75,6 +77,11 @@ pageContext.setAttribute("pageNum", pageNum);
             console.log(">> getJSONInquire() 실행~~~");
             location.href = "inquire.jsp"; 
       };
+      
+      function getCart() {
+    	  console.log(">> getCart() 실행~~~");
+          location.href = "cart.jsp"; 
+      }
       
       /* // 삭제하기 버튼 함수
       function deleteOne() {
@@ -106,7 +113,7 @@ pageContext.setAttribute("pageNum", pageNum);
               <button class="utilMenuOne">회원가입</button>
             </li>
             <li>
-              <button class="utilMenuOne">장바구니</button>
+              <button class="utilMenuOne" id="cartBtn">장바구니</button>
             </li>
             <li>
               <button class="utilMenuOne" id="csCenterBtn">고객센터</button>
@@ -115,7 +122,7 @@ pageContext.setAttribute("pageNum", pageNum);
         </div>
 
         <div class="headerTop">
-          <h1>bitElectro</h1>
+          <h1><a href="mainMenu.jsp">bitElectro</a></h1>
         </div>
         <div class="headerMenuArea">
           <ul class="headerMenu">
@@ -144,14 +151,13 @@ pageContext.setAttribute("pageNum", pageNum);
             <div class="leftMenu">
               <ul class="leftMenuBar">
                 <button class="leftMenuTitle">고객센터</button>
-                <hr />
-                <button class="leftMenuBtn" onclick="noticeGo()">
+                <button class="leftMenuBtn" id="noticeBtn">
                   공지사항
                 </button>
-                <button class="leftMenuBtn" onclick="faqGo()">
+                <button class="leftMenuBtn" id="faqBtn">
                   자주 묻는 질문
                 </button>
-                <button class="leftMenuBtn" onclick="inquireGo()">
+                <button class="leftMenuBtn" id="inquireBtn">
                   나의 문의 내역
                 </button>
               </ul>
