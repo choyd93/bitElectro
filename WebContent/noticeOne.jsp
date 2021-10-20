@@ -61,7 +61,20 @@ pageContext.setAttribute("pageNum", pageNum);
         $("#noticeBtn").click(getJSONNotice);
         $("#faqBtn").click(getJSONFaq);
         $("#inquireBtn").click(getJSONInquire);
+
+        $("#login").click(getLogin);
+        $("#joinMember").click(getJoinMember);
       })
+      
+      function getLogin() {
+    	  console.log(">> getLogin() 실행~~~");
+          location.href = "logIn.jsp"; 
+      }
+      
+      function getJoinMember() {
+    	  console.log(">> getLogin() 실행~~~");
+          location.href = "joinMemberShip.jsp"; 
+      }
 
       function getJSONNotice() {
           console.log(">> getJSONNotice() 실행~~~");

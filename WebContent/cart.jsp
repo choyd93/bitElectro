@@ -26,14 +26,80 @@
         $("#noticeBtn").click(getJSONNotice);
         $("#faqBtn").click(getJSONFaq);
         $("#inquireBtn").click(getJSONInquire);
+        $("#goToShoppingBtn").click(getMainMenu);
+        
+        // 체크박스 전체 선택 
+        $("#checkall").click(function(){
+        	console.log("checkall 실행 ~~~~~~~~~");
+
+            if($("#checkall").prop("checked")){
+                $("input[name=cnto]").prop("checked",true);
+            }else{
+                $("input[name=cnto]").prop("checked",false);
+            }
+        })
+        
+        $("#selectDelete").click(function(){
+        	console.log("selectDelete 실행 ~~~~~~~~~~");
+        	
+        	if(confirm("선택한 상품을 삭제 하시겠습니까?")){
+        		$("#buttonSwitch").attr("value", "delete");
+
+        		var str = $("#frm").serialize();
+				console.log('str: '+ str);
+        		
+				$("#frm").submit();
+			}else{
+				return;
+			}
+        })
+        
+        $("#orderAllsubmitBtn").click(function(){
+        	console.log("orderAllsubmitBtn 실행 ~~~~~~~~~~");
+        	var cnto = $("#cntoId").val();
+	    	console.log("cnto : " + cnto);
+
+        	if(confirm("선택한 상품을 주문 하시겠습니까?")){
+            	console.log("orderAllsubmitBtn 실행 ~~~~~~~~~~");
+
+        		/* if(cnto == null){
+    				console.log('cnto가 널');
+        		} 
+        		 */
+        		$("#buttonSwitch").attr("value", "orderAll");
+        		
+        		var str = $("#frm").serialize();
+				console.log('str: '+ str);
+
+        		$("#frm").submit();
+			}else{
+				return;
+			}		
+        })
+        
+        
+		$(document).on("click", "#pcntUpdate", function(){
+			console.log("pcntUpdate 실행 ~~~~~~~~~~");
+        	
+        	if(confirm("상품 수량을 변경 하시겠습니까?")){
+        		$("#buttonSwitch").attr("value", "orderNumUpdate");
+        		
+        		var str = $("#frm").serialize();
+				console.log('str: '+ str);
+				
+				/* if(cnto == null) {
+					console.log('cnto가 널');
+					return;
+				} */
+
+        		$("#frm").submit();
+			}else{
+				return;
+			}		
+            });
        
       });
       
-      function getJSONNotice() {
-          console.log(">> getJSONNotice() 실행~~~");
-          location.href = "notice.jsp";
-      };
-
       function getJSONCart() {
         console.log(">> getJSONCart() 실행~~~");
 
@@ -41,34 +107,59 @@
           type: "get",
           dataType: "json", 
           success: function (data) {
-        	  const list = data["list"];
-              const plist = data["plist"];
+        	  const clist = data["CartVO"];
+              const plist = data["ProductVO"];
               console.log(data); 
-              console.log("list : " + list); 
-              console.log(list); 
+              console.log("2번 clist : " + clist); 
+              console.log(clist); 
+              console.log(clist[0]);
+              console.log("5번 clist[1] : " + clist[0]);
+			  console.log("6번 clist[1].cnto : " + clist[0].cnto);
+			  console.log("7번 data['ProductVO'] : " + data["ProductVO"]);
+   			  console.log("8번 data['ProductVO'][0] : " + data["ProductVO"][0]);
+   			  console.log("9번 data['ProductVO'][0].pcode : " + data["ProductVO"][0].pcode);
+   			  console.log("10번 data['CartVO'][0].cnto : " + data["CartVO"][0].cnto);
+   			  
+              console.log("plist : " + plist);
               console.log(plist); 
-              const begin = plist[0].Begin;
-              var cPage = plist[0].BeginPage;
-              var cPagePrev = plist[0].BeginPage - 1;
-              var cPageNext = plist[0].BeginPage + 1;
-              console.log("begin : " + begin); 
-              console.log("cPage : " + cPage); 
-              console.log("cPagePrev : " + cPagePrev); 
-              console.log("cPageNext : " + cPageNext); 
             
             // 데이터 넣기 전 공백으로 초기화 
             $("#noticeList").html("");
             
+            // CartVO에서 원하는 값을 넣을 배열 선언
+            var cntoList = [];
+            var pcntList = [];
+            
+             $.each(clist, function(index, item){
+                console.log("item :" + item);
+            	console.log("item.cnto :" + item.cnto);
+            	console.log("item.pcnt :" + item.pcnt);
+            	
+            	cntoList.push(item.cnto);
+            	pcntList.push(item.pcnt);
+            }) 
+			console.log("장바구니 번호 cntoList : " + cntoList);
+ 			console.log("장바구니 갯수 pcntList : " + pcntList);
+            
             var result = "";
-            $.each(list, function(index, item){
-		             result += "<tr>";
-		             result += "<td>" + item.rnum + "</td>";
-		           	 result += "<td>";
-		           	 result += "<a href='"+"noticeOne.jsp?ccategory="+item.ccategory+"&page="+1+"&rnum="+item.rnum+"'>";
-	             	 result += item.csubject + "</td>";
-		             result += "<td>" + item.crdate + "</td>";
-		             result += "</tr>";
-         	});
+            var num = 1;
+            $.each(plist, function(index, item){
+	             result += "<tr>";
+	             result += "<td> <input type='checkbox' id='cntoId' name='cnto' value='"+cntoList[index]+"'/> </td>";
+	           	 result += "<td> <p>"+item.pname+"</p> </td>";
+	           	 result += "<input type='hidden' name='pname' value='"+item.pname+"'/>";
+	           	 result += "<td> <p>"+item.pprice+"</p> </td>";
+	           	 result += "<input type='hidden' name='pprice' value='"+item.pprice+"'/>";
+           		 result += "<td> <input type='number' name='pcnt' min='1' max='10' value='"+pcntList[index]+"'/> <button type='button' class='pageBtn' id='pcntUpdate'>옵션변경</button> </td>";
+	           	 result += "<td> <p>"+item.pdiscount+"</p> </td>";
+	           	 result += "<input type='hidden' name='pdiscount' value='"+item.pdiscount+"'/>";
+	           	 result += "<td> <p style='color:#e71c2b'>"+((item.pprice - item.pdiscount) * pcntList[index])+"</p> </td>";
+	           	 result += "<input type='hidden' name='realPrice' value='"+((item.pprice - item.pdiscount) * pcntList[index])+"'/>";
+           	 	 result += "<td> <button type='button' class='submitButtonType' value='"+(index+1)+"'>바로구매</input> </td>";
+	           	 result += "<input type='hidden' name='orderBtn' value='"+(index+1)+"'/>";
+	             result += "</tr>";
+	             console.log("index :" + index);
+    	});
             console.log("result : " + result);
             $("#noticeList").html(result);
             
@@ -84,6 +175,17 @@
         });
       }
       
+      function pcntUpdate() {
+          console.log(">> pcntUpdate() 실행~~~");
+
+      }
+     
+      
+      function getJSONNotice() {
+          console.log(">> getJSONNotice() 실행~~~");
+          location.href = "notice.jsp";
+      };
+      
       function getJSONFaq() {
         	console.log(">> faqGo() 실행~~~");
             location.href = "faq.jsp";
@@ -97,6 +199,16 @@
       function getCart() {
     	  console.log(">> getCart() 실행~~~");
           location.href = "cart.jsp"; 
+      }
+      
+      function getMainMenu() {
+    	  console.log(">> getMainMenu() 실행~~~");
+          location.href = "mainMenu.jsp"; 
+      }
+      
+      function cartSubmit() {
+    	  console.log(">> cartSubmit() 실행~~~");
+		  
       }
       
     </script>
@@ -156,12 +268,14 @@
         <div id="bitContentArea">
           <div id="mainArea" style="margin-bottom:100px;">
             <div class="mainContent">
-	            <form action="payment.jsp">
-	            	<input type="checkbox"> 전체 선택(0개)
-	            	<button type="button" class="submitButtonType">선택 삭제</button>
+	            <form action="cartOrder" method="get" id="frm" onsubmit="cartSubmit">
+	            	<input type="checkbox" id="checkall"> 전체 선택
+	            	<button type="button" id="selectDelete" class="submitButtonType">선택 삭제</button>
+	            	
               <table class="tableContent marginTop">
                 <thead>
                   <tr>
+                  	<th></th>
                     <th>상품명</th>
                     <th>판매가</th>
                     <th>수량</th>
@@ -178,13 +292,14 @@
               <div class="cartContentBtnArea">
               	<ul class="cartContentBnUl">
 	              <li class="cartContentBtn">
-	              <button type="button" class="pageBtn">계속 쇼핑하기</button>
+	              <button type="button" class="pageBtn" id="goToShoppingBtn">계속 쇼핑하기</button>
 	              </li>
 	        	  <li class="cartContentBtn">
-	              <button type="submit" class="submitButtonType">주문하기</button>
+	              <button type="button" id="orderAllsubmitBtn" class="submitButtonType">주문하기</button>
 	              </li>
 	            </ul>
               </div>
+              <input type="hidden" id="buttonSwitch" name="switchBtn"/>
               </form>  
             </div>
           </div>

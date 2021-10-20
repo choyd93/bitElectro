@@ -4,11 +4,37 @@
 <%@page import="com.bc.model.vo.ProductVO"%>
 <%@page import="com.bc.model.dao.CartDAO"%>
 <%@page import="com.bc.model.dao.ProductDAO"%>
- 
+<%@page import="com.bc.model.dao.MemberDAO"%>
+<%@page import="com.bc.model.vo.MemberVO"%>
+<%@page import="com.bc.model.vo.OrderProdVO"%>
+
+<%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="com.bc.model.common.Paging"%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
+
+<%  
+
+//테스트 아이디값
+String mid = "test1";
+MemberVO mvo = MemberDAO.getMemberUserInfo(mid);
+
+List<OrderProdVO> op = (List<OrderProdVO>)request.getAttribute("oplist");
+
+System.out.println("전달 받은 op : " + op);
+
+
+for(OrderProdVO vo : op){
+	System.out.println("vo.getFinalprice() : " + vo.getFinalprice());
+
+}
+
+pageContext.setAttribute("op", op);
+
+pageContext.setAttribute("mvo", mvo);
+
+%> 
 
 <html lang="en">
   <head>
@@ -30,68 +56,23 @@
         $("#noticeBtn").click(getJSONNotice);
         $("#faqBtn").click(getJSONFaq);
         $("#inquireBtn").click(getJSONInquire);
-       
       });
 
-      function getJSONPayment() {
-        console.log(">> getJSONPayment() 실행~~~");
-
-        $.ajax("ssss", {
-          type: "get",
-          dataType: "json", 
-          success: function (data) {
-        	  const list = data["list"];
-              const plist = data["plist"];
-              console.log(data); 
-              console.log("list : " + list); 
-              console.log(list); 
-              console.log(plist); 
-              const begin = plist[0].Begin;
-              var cPage = plist[0].BeginPage;
-              var cPagePrev = plist[0].BeginPage - 1;
-              var cPageNext = plist[0].BeginPage + 1;
-              console.log("begin : " + begin); 
-              console.log("cPage : " + cPage); 
-              console.log("cPagePrev : " + cPagePrev); 
-              console.log("cPageNext : " + cPageNext); 
-            
-            // 데이터 넣기 전 공백으로 초기화 
-            $("#noticeList").html("");
-            
-            var result = "";
-            $.each(list, function(index, item){
-		             result += "<tr>";
-		             result += "<td>" + item.rnum + "</td>";
-		           	 result += "<td>";
-		           	 result += "<a href='"+"noticeOne.jsp?ccategory="+item.ccategory+"&page="+1+"&rnum="+item.rnum+"'>";
-	             	 result += item.csubject + "</td>";
-		             result += "<td>" + item.crdate + "</td>";
-		             result += "</tr>";
-         	});
-            console.log("result : " + result);
-            $("#noticeList").html(result);
-            
-          },
-          error: function (request, status, error) {
-            alert(
-              "Ajax 처리 실패, " + "\n" +
-                "code : " + request.status + "\n" +
-                "message : " + request.responseText + "\n" +
-                "error : " + error
-            );
-          },
-        });
-      }
+      
+      function getJSONNotice() {
+          console.log(">> getJSONNotice() 실행~~~");
+          location.href = "notice.jsp";
+      };
       
       function getJSONFaq() {
-        	console.log(">> faqGo() 실행~~~");
+        	console.log(">> getJSONFaq() 실행~~~");
             location.href = "faq.jsp";
-        };
-      
+      };
+
       function getJSONInquire() {
-          console.log(">> getJSONInquire() 실행~~~");
-          location.href = "inquire.jsp"; 
-        }
+            console.log(">> getJSONInquire() 실행~~~");
+            location.href = "inquire.jsp"; 
+      };
       
       function getCart() {
     	  console.log(">> getCart() 실행~~~");
@@ -149,18 +130,18 @@
         
         <div id="bitContentArea">
           <div id="mainArea">
-          <form id="">
+          <form action="orderResist" method="get" id="frm">
             <div class="mainContent">
             	<div>
             		<h1>1. 배송정보</h1>
             		<div class="paymentBorder">
-            			<input type="radio" id="defaultAddress" value="defaultAddress">
+            			<input type="radio" name="deleveryAddress" id="defaultAddress" value="defaultAddress">
             			<label for="defaultAddress">기본배송지</label>
-            			<input type="radio" id="defaultAddress" value="defaultAddress">
-            		    <label for="defaultAddress">직접입력</label>
-            		    <p>홍길동</p>
-            		    <p>(01234) 서울특별히 마포구 비트로 9999</p>
-            		    <p>010-1234-1234</p>
+            			<input type="radio" name="deleveryAddress" id="otherAddress" value="otherAddress">
+            		    <label for="otherAddress">직접입력</label>
+            		    <p>${mvo.mname }</p>
+            		    <p>${mvo.maddress }</p>
+            		    <p>${mvo.mphone }</p>
             		    <select>
             		        <option value="aa">배송시 요청사항 선택하기</option>  
             		    	<option value="aa">빠르게 보내주세요.</option>  
@@ -174,13 +155,22 @@
                 <thead>
                   <tr>
                     <th>상품명</th>
-                    <th>수량<th>
+                    <th>수량</th>
                     <th>주문금액</th>
                     <th>배송정보</th>
                   </tr>
                 </thead>
                 <tbody id="noticeList">
-                </tbody>
+                	 <c:forEach var="vo" items="${op }">
+				         <tr>
+				          	<td>${vo.pname }</td>
+					       	<td>${vo.pcnt }</td>
+					        <td>${vo.realprice }</td>
+					        <td>무료배송</td>
+						 </tr>
+				</tbody>
+					 </c:forEach>
+                
                 <tfoot id="pageBlock">
                 </tfoot>
               </table>
@@ -202,11 +192,11 @@
             	  	<div>
             	  	<h1 style="width:340px;">4. 결제방법</h1>
             	 	 <div class="paymentBorderSmall">
-	            		<input type="radio" id="accountTransfer" value="accountTransfer">
+	            		<input type="radio" name="paymentType" id="accountTransfer" value="accountTransfer">
 	            			<label for="accountTransfer">계좌이체</label>
-	           			<input type="radio" id="depositWithout" value="depositWithout">
+	           			<input type="radio" name="paymentType" id="depositWithout" value="depositWithout">
 	           				<label for="depositWithout">무통장 입금</label>
-	           			<input type="radio" id="creditCard" value="creditCard">
+	           			<input type="radio" name="paymentType" id="creditCard" value="creditCard">
             				<label for="creditCard">신용카드</label>
        				</div>
        				</div>
@@ -216,10 +206,13 @@
             	<div class="paymentFinalArea">
             		<h1>5. 최종결제 금액 확인</h1>
             		<div class="paymentBorderSmall">
-	            		<p>총 상품 금액  0원</p>
+            		
+            			<input type="hidden" >
+	            		<p>총 상품 금액 335,000원</p>
+	            		<%-- <p>총 상품 금액 ${op.finalprice }원</p> --%>
 	            		<p>배송비  0원</p>
-	            		<p>결제 방법</p>
-	            		<p>최종결제 금액  0원</p>
+	            		<!-- <p>결제 방법</p> -->
+	            		<p>최종결제 금액 335,000원</p>
             		</div>
             	</div>
             	</div>
@@ -229,7 +222,7 @@
 	              <button type="button" class="pageBtn">취소하기</button>
 	              </li>
 	        	  <li class="cartContentBtn">
-	              <button type="button" class="submitButtonType">결제하기</button>
+	              <button type="submit" class="submitButtonType" id="finalOrderSubmit">결제하기</button>
 	              </li>
 	            </ul>
               </div>

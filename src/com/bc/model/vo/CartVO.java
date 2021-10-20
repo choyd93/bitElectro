@@ -2,6 +2,13 @@ package com.bc.model.vo;
 
 public class CartVO {
 	private String pcode, mid, cnto, cno, pcnt;
+	
+	public CartVO() {}
+	
+	public CartVO(String cnto, String pcnt) {
+		this.cnto = cnto;
+		this.pcnt = pcnt;
+	}
 
 	public CartVO(String pcode, String mid, String cnto, String cno, String pcnt) {
 		super();

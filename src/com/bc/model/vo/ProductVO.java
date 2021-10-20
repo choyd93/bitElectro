@@ -4,6 +4,12 @@ public class ProductVO {
 
 	String pcode, cno, pname, pprice, pimage, pstock, pdescription, pdiscount, pregist, pcumulative_sales, preating,
 			preview_count;
+	
+	public ProductVO(String pname, String pprice, String pdiscount) {
+		this.pname = pname;
+		this.pprice = pprice;
+		this.pdiscount = pdiscount;
+	}
 
 	public ProductVO(String pcode, String cno, String pname, String pprice, String pimage, String pstock,
 			String pdescription, String pdiscount, String pregist, String pcumulative_sales, String preating,

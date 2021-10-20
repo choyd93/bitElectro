@@ -1,20 +1,42 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
- <%@page import="com.bc.model.vo.NoticeVO"%>
+<%@page import="com.bc.model.vo.CartVO"%>
+<%@page import="com.bc.model.vo.ProductVO"%>
+<%@page import="com.bc.model.dao.CartDAO"%>
+<%@page import="com.bc.model.dao.ProductDAO"%>
+<%@page import="com.bc.model.dao.MemberDAO"%>
+<%@page import="com.bc.model.vo.MemberVO"%>
+<%@page import="com.bc.model.vo.OrderProdVO"%>
+
+<%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="com.bc.model.common.Paging"%>
-<%@page import="com.bc.model.dao.NoticeDAO"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
+
+<%  
+
+//테스트 아이디값
+String mid = "test1";
+MemberVO mvo = MemberDAO.getMemberUserInfo(mid);
+
+pageContext.setAttribute("mvo", mvo);
+
+%> 
 
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>메인 메뉴 | bitElectro</title>
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /> -->
+    <title>주문결제 | bitElectro</title>
     <link rel="stylesheet" href="./styles.css" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
       $(document).ready(function () {
-        console.log("notice 실행");  
+        console.log("notice 실행");
+        
+        getJSONPayment();
         
         $("#csCenterBtn").click(getJSONNotice);
         $("#cartBtn").click(getCart);
@@ -22,68 +44,54 @@
         $("#noticeBtn").click(getJSONNotice);
         $("#faqBtn").click(getJSONFaq);
         $("#inquireBtn").click(getJSONInquire);
-        $("#login").click(getLogin);
-        $("#joinMember").click(getJoinMember);
-        $("#myPageBtn").click(getMyPage);
-       
+        $("#goToShoppingBtn").click(getMainMenu);
       });
 
+      
       function getJSONNotice() {
           console.log(">> getJSONNotice() 실행~~~");
           location.href = "notice.jsp";
       };
       
       function getJSONFaq() {
-        	console.log(">> faqGo() 실행~~~");
+        	console.log(">> getJSONFaq() 실행~~~");
             location.href = "faq.jsp";
-        };
-      
+      };
+
       function getJSONInquire() {
-          console.log(">> getJSONInquire() 실행~~~");
-          location.href = "inquire.jsp"; 
-        }
+            console.log(">> getJSONInquire() 실행~~~");
+            location.href = "inquire.jsp"; 
+      };
       
       function getCart() {
     	  console.log(">> getCart() 실행~~~");
           location.href = "cart.jsp"; 
       }
       
-      function getLogin() {
-    	  console.log(">> getLogin() 실행~~~");
-          location.href = "logIn.jsp"; 
-      }
-      
-      function getJoinMember() {
-    	  console.log(">> getLogin() 실행~~~");
-          location.href = "joinMemberShip.jsp"; 
-      }
-      
-      function getMyPage() {
-    	  console.log(">> getMyPage() 실행~~~");
-          location.href = "myPage.jsp"; 
+      function getMainMenu() {
+    	  console.log(">> getMainMenu() 실행~~~");
+          location.href = "mainMenu.jsp"; 
       }
       
     </script>
   </head>
   <body>
+  	<div id="wrapBody">
     <div id="header">
       <div class="headerWrap">
         <div class="utilArea">
           <ul class="utilMenu">
             <li>
-              <button class="utilMenuOne" id="login">로그인</button>
+              <button class="utilMenuOne">로그인</button>
             </li>
             <li>
-              <button class="utilMenuOne" id="joinMember">회원가입</button>
+              <button class="utilMenuOne">회원가입</button>
             </li>
             <li>
               <button class="utilMenuOne" id="cartBtn">장바구니</button>
             </li>
             <li>
               <button class="utilMenuOne" id="csCenterBtn">고객센터</button>
-            </li>
-            <li>
-              <button class="utilMenuOne" id="myPageBtn">마이페이지</button>
             </li>
           </ul>
         </div>
@@ -109,60 +117,58 @@
 
     <div id="container">
       <div id="content">
-        <div class="mainMenuBannerArea">
-          <img src="https://cdn.011st.com/11dims/resize/1240x400/quality/99/11src/http://cdn.011st.com/ds/2021/10/15/1311/87c6631a26f7c875e4255609166d01ff.jpg" height="300px" width="1000px";>
-        </div>
+        <div class="locationArea">
+          <h1>주문완료</h1>
+          <hr />
+        </div >
+        
         <div id="bitContentArea">
-          <div class="mainMenuTitleArea">
-          <span>고객님 취향저격 추천 상품</span>
-          <h2 class="mainMenuTitle1">베스트 상품</h2>
+          <div id="mainArea">
+            <div class="mainContent">
+            	<div>
+            		<div class="paymentBorder">
+            			<h1 style="colrer:red">고객님의 주문이 완료되었습니다.<h1>
+            		</div>
+            	</div>
+           	<div>
+              <table class="tableContent marginTop">
+                <thead>
+                  <tr>
+                    <th>결제수단</th>
+                    <th>신용카드</th>
+                  </tr>
+                </thead>
+                <tbody id="noticeList">
+		           <tr>
+			          	<td>최종결제금액</td>
+				       	<td> 0원</td>
+				   </tr>
+				</tbody>
+              </table>
+              </div>
           </div>
-          <hr/>
-          <div class="mainProdArea">
-          	<ul class="middleProdArea">
-          		<li>
-          <div class="proItem">
-       	  <a href="/app/goods/goodsDetail?goodsNo=0011916654&amp;ws_mainPrd1=0011916654" target="_self" class="prdLink">
-          <div class="">
-          	<img class="imgMargin" src="http://static1.e-himart.co.kr/contents/goods/00/11/91/66/54/0011916654__NT350XCR-A58M__M_300_300.jpg" alt="북플러스 노트북 NT350XCR-A58M 인텔 10세대 i5 8GB 256GB 프리도스 (화이트)" width="300" height="300" >
+          <div>
           </div>
-          <div class="prdInfo">
-		  <p class="prdName prdInfo">
-			삼성전자&nbsp;[노트북 판매1위]&nbsp;북플러스 노트북 (화이트)</p>
-			<p>649,000원</p>
-		  </div>
-          </div>
-          	</li>
-          	<li>
-          <div class="proItem">
-       	  <a href="/app/goods/goodsDetail?goodsNo=0011916654&amp;ws_mainPrd1=0011916654" target="_self" class="prdLink">
-          <div class="">
-          	<img class="imgMargin" src="https://m.etlandmall.co.kr/nas/cdn/attach/product/2021/03/26/S2963327/S2963327_0_500.jpg" alt="비스포크 4도어 냉장고" width="300" height="300" >
-          </div>
-          <div class="prdInfo">
-		  <p class="prdName prdInfo">
-			삼성전자&nbsp;[냉장고 판매1위]&nbsp;비스포크 4도어 냉장고</p>
-			<p>1,370,000원</p>
-		  </div>
-          </div>
-          </li>
-          <li>
-          <div class="proItem">
-       	  <a href="/app/goods/goodsDetail?goodsNo=0011916654&amp;ws_mainPrd1=0011916654" target="_self" class="prdLink">
-          <div class="">
-          	<img class="imgMargin" src="http://gdimg.gmarket.co.kr/1738168373/still/280?ver=1579672729" alt="독일 보쉬 프리미엄 세탁기" width="300" height="300" >
-          </div>
-          <div class="prdInfo">
-		  <p class="prdName prdInfo">
-			보쉬&nbsp;[세탁기 판매량 폭주]&nbsp;독일 보쉬 프리미엄 세탁기</p>
-			<p>2,237,000원</p>
-		  </div>
-          </div>
-          </li>
-          </ul>
         </div>
         <div class="rightArea"></div>
+        <div class="cartContentBtnArea">
+              	<ul class="cartContentBnUl">
+	              <li class="cartContentBtn">
+	              <button type="button" class="pageBtn" id="goToShoppingBtn">쇼핑계속하기</button>
+	              </li>
+	        	  <li class="cartContentBtn">
+	              <button type="button" class="submitButtonType">주문확인하기</button>
+	              </li>
+	            </ul>
+              </div>
       </div>
+      <!-- <hr style="margin-left:40px;"/>
+          <div style="margin-left:100px">
+          <h3>유의사항</h3>
+			<p>한 번에 주문 가능한 최대 상품 종류는 10개입니다.</p>
+			<p>담긴 상품 종류(옵션단위)는 10개까지만 보여집니다.</p>
+			<p>담긴 상품 종류가 10개 초과되면 가장 예전에 담았던 상품 순서대로 비노출 됩니다.</p>
+          </div> -->
     </div>
     </div>
 
@@ -198,6 +204,7 @@
         </div>
       </div>
     </footer>
+    </div>
     <script>
        const noticeGo = () => {
         location.href = "controller?type=notice";

@@ -47,6 +47,8 @@
 
         $("#noticeBtn").click(getJSONNotice);
         $("#csCenterBtn").click(getJSONNotice);
+        $("#cartBtn").click(getCart);
+        
         $("#faqBtn").click(getJSONFaq);
         $("#inquireBtn").click(getJSONInquire);
 
@@ -139,7 +141,7 @@
       </div>
     </div>
 
-    <div id="container">
+    <div id="container" style="overflow-y:auto;">
       <div id="content">
         <div class="locationArea">
           <h1>1대1 문의하기</h1>
@@ -212,10 +214,7 @@
                           rows="5"
                           cols="45"
                           name="ccontent"
-                          id="ccontent"
-                        >
-                        ${nvo.ccontent }
-                        </textarea>
+                          id="ccontent">${nvo.ccontent }</textarea>
                       </td>
                     </tr>
                   </tbody>
@@ -244,7 +243,7 @@
     </div>
 
     <footer id="footer">
-      <div class="infoArea">
+      <div class="infoArea" style="height:300px">
         <div class="footerMenuArea">
           <ul class="footerMenu">
             <li>회사소개</li>

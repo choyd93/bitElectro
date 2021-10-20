@@ -17,12 +17,13 @@ import com.bc.model.vo.CartVO;
 import com.bc.model.vo.ProductVO;
 
 @WebServlet("/cartView")
-public class CartController extends HttpServlet {
+public class CartViewController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	// 나중에 구현
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
+		response.setContentType("application/x-json; charset=UTF-8");
 
 		System.out.println("--------- cartView get 실행 -----------");
 
@@ -33,8 +34,8 @@ public class CartController extends HttpServlet {
 		String mid = "test1";
 		System.out.println("mid : " + mid);
 		
-		List<CartVO> cvo = CartDAO.cartSelectList(mid);
-		
+		List<CartVO> cvo = CartDAO.cartSelectList(mid);	
+				
 		ProductVO pvo = new ProductVO();
 		List<ProductVO> pvoList = new ArrayList<ProductVO>();
 
@@ -81,11 +82,11 @@ public class CartController extends HttpServlet {
 		
 		for (CartVO vo : cvo) {
 			result.append("{");
-			result.append("\"cnto\" : " + vo.getCnto() + ",");
-			result.append("\"pcocde\" : " + vo.getPcode() + ",");
+			result.append("\"cnto\" : \"" + vo.getCnto() + "\",");
+			result.append("\"pcocde\" : \"" + vo.getPcode() + "\",");
 			result.append("\"mid\" : \"" + vo.getMid() + "\",");
 			result.append("\"cno\" : \"" + vo.getCno() + "\",");
-			result.append("\"pcnt\" : " + vo.getPcnt() + ",");
+			result.append("\"pcnt\" : \"" + vo.getPcnt() + "\"");
 			result.append("},");
 		}
 		result.delete(result.length() - 1, result.length());
@@ -100,7 +101,7 @@ public class CartController extends HttpServlet {
 		
 		//JSON 형태 문자열로 바꾸기
 		StringBuilder result = new StringBuilder();
-		result.append("{ \"ProductVO\" : [");	
+		result.append("\"ProductVO\" : [");	
 		
 		for (ProductVO vo : pvo) {
 			result.append("{");
@@ -109,7 +110,7 @@ public class CartController extends HttpServlet {
 			result.append("\"pname\" : \"" + vo.getPname() + "\",");
 			result.append("\"pprice\" : \"" + vo.getPprice() + "\",");
 			result.append("\"pdiscount\" : \"" + vo.getPdiscount() + "\",");
-			result.append("\"pregist\" : \"" + vo.getPregist() + "\",");
+			result.append("\"pregist\" : \"" + vo.getPregist() + "\"");
 			result.append("},");
 		}
 		result.delete(result.length() - 1, result.length());

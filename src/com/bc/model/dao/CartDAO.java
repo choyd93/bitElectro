@@ -1,6 +1,8 @@
 package com.bc.model.dao;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 
@@ -15,6 +17,27 @@ public class CartDAO {
 		List<CartVO> cvo = ss.selectList("bitElectro.cartSelectList", mid);
 		ss.close();
 		return cvo;
+	}
+	
+	// 장바구니 하나 삭제하기
+	public static void cartDeleteOne(String cnto, String mid) {
+		Map<String, String> map = new HashMap<>();
+		map.put("cnto", cnto);
+		map.put("mid", mid);
+		
+		SqlSession ss = DBService.getFactory().openSession(true);
+		ss.delete("bitElectro.cartDeleteOne", map);
+		ss.close();
+	}
+	
+	public static void cartNumUpdate(String pcnt, String cnto) {
+		Map<String, String> map = new HashMap<>();
+		map.put("pcnt", pcnt);
+		map.put("cnto", cnto);
+		
+		SqlSession ss = DBService.getFactory().openSession(true);
+		ss.update("bitElectro.cartNumUpdate", map);
+		ss.close();
 	}
 
 }

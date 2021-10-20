@@ -59,8 +59,15 @@
 	SELECT * FROM CART WHERE MID = #{mid} ORDER BY CNTO
 	</select>
 
+	<!-- 장바구니 하나 삭제 -->
+	<delete id="cartDeleteOne" parameterType="map">
+	DELETE FROM CART WHERE CNTO = #{cnto} AND MID = #{mid}
+	</delete>
 	
-	
+	<!-- 장바구니 하나 업데이트 -->
+	<update id="cartNumUpdate">
+	UPDATE CART SET pcnt = #{pcnt} WHERE cnto = #{cnto}
+	</update>
 	
  <!--======================================  회원 정보  =============================================-->
 	<!-- 회원 아이디로 정보 찾기 -->
@@ -83,6 +90,82 @@
 		AND MPHONE = #{mphone }
 	</select>
 	
+ <!--======================================  남규 회원 정보  =============================================-->
+	
+	<select id="list" parameterType="logIn" resultType="logIn">
+	 	SELECT MID FROM MEMBER ORDER BY MID
+	 </select>
+	 
+	<!-- 로그인 id, pw 뽑을 때 -->
+	<select id="logIn" parameterType="logIn" resultType="logIn" >
+		SELECT MID, MPW, MNAME, MPHONE, MADDRESS, MJUMIN, MEMAIL, MPOINT, MCUMULATIVE_BUY, MJOINDATE, MCLASS
+		 FROM MEMBER
+		WHERE MID = #{mid} AND MPW = #{mpw}
+	</select> 
+
+	<!-- 아이디 찾기 -->	
+	<select id="findId" parameterType="map" resultType="com.bc.model.vo.LogInVO" >
+	SELECT MID, MPW, MNAME, MPHONE, MADDRESS, MJUMIN, MEMAIL, MPOINT, MCUMULATIVE_BUY, MJOINDATE, MCLASS
+ 	 FROM MEMBER
+	WHERE MNAME = #{mname} AND MPHONE = #{mphone}
+	</select>
+	
+	<!-- 비밀번호 찾기 -->
+	<select id="findPassword" resultType="com.bc.model.vo.LogInVO">
+	SELECT MID, MPW, MNAME, MPHONE, MADDRESS, MJUMIN, MEMAIL, MPOINT, MCUMULATIVE_BUY, MJOINDATE, MCLASS
+ 	FROM MEMBER
+ 	WHERE MID =  #{mid}  AND MNAME = #{mname} AND MPHONE = #{mphone}
+	</select>
+	
+	<!-- 회원가입 -->
+	<!-- 필요한 인덱스가 아이디, 비밀번호, 비밀번호확인, 전화번호, 생년월일, 주소, 이메일 -->
+	<!-- id, 비밀번호, 이름, 전화번호, 주소, 주민등록번호, 이메일, 포인트, 누적금액, 가입일, 회원구분(등급) -->
+	<insert id="joinMemberShip" parameterType="com.bc.model.vo.LogInVO">
+		INSERT INTO MEMBER
+			( MID, MPW, MNAME, MPHONE, MADDRESS, MJUMIN, MEMAIL, MPOINT, MCUMULATIVE_BUY, MJOINDATE, MCLASS  )
+		VALUES( #{mid}, #{mpw}, #{mname}, #{mphone}, #{maddress}, #{mjumin}, #{memail}, #{mpoint}, #{mcumulative_buy}, #{mjoindate}, #{mclass} )
+	</insert>
+	
+	<!-- 로그인 map 방식 -->
+	<select id="logInMap" parameterType="map" resultType="logIn">
+		SELECT *
+		FROM MEMBER
+		<where>
+			<if test="idx == 0">
+				MID = #{keyword}
+			</if>
+			<if test="idx == 1">
+				MPW = #{keyword}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 비밀번호 재설정 처리 udate문 -->
+	<update id="updatePassword" parameterType="logIn">
+		UPDATE MEMBER
+		SET MPW = #{mpw}
+		WHERE MID = #{mid}
+	</update>
+	
+	<!-- 회원정보 수정 -->
+	<update id="updateMember" parameterType="logIn">
+		UPDATE MEMBER
+		SET MPW = #{mpw},
+			MPHONE = #{mphone},
+			MEMAIL = #{memail},
+			MADDRESS = #{maddress}
+		WHERE MID = #{mid}
+	</update>
+	
+	<!-- 회원탈퇴 -->
+	<delete id="deleteMember" parameterType="logIn">
+		DELETE FROM MEMBER WHERE MID = #{mid}
+	</delete>
+	
+	<!-- 아이디 중복확인 -->
+	<select id="idCheck" parameterType="logIn" resultType="int">
+		SELECT COUNT(*) FROM MEMBER WHERE MID = #{mid}
+	</select>
 	
  <!--======================================  관리자 정보  =============================================-->
 	 <!-- <resultMap type="com.bc.model.vo.MemberVO" id="MemberResult">

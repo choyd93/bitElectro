@@ -16,6 +16,16 @@ public class ProductDAO {
 			ss.close();
 			return pvo;
 		}
+		
+	// 상품이름으로 상품 정보 select
+		public static ProductVO selectProdNyPname(String pcode) {
+			SqlSession ss = DBService.getFactory().openSession();
+			ProductVO pvo = ss.selectOne("bitElectro.selectProdNyPname", pcode);
+			ss.close();
+			return pvo;
+		}
+		
+		
 
 
 }

@@ -152,7 +152,7 @@ pageContext.setAttribute("mvo", mvo);
               </ul>
             </div>
           </div>
-          <div id="mainArea">
+          <div id="mainArea" style="overflow-y:auto">
             <div class="mainContent">
               <form action="inquireResist" method="post" id="frm1">
                 <table class="tableContentInquireWrite">
@@ -200,9 +200,7 @@ pageContext.setAttribute("mvo", mvo);
                           rows="5"
                           cols="45"
                           name="ccontent"
-                          id="ccontent"
-                        >
-                        </textarea>
+                          id="ccontent"></textarea>
                       </td>
                     </tr>
                   </tbody>
